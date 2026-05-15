@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PinPro | 4:5 Social Portrait Generator</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Hind+Siliguri:wght@400;700&family=Montserrat:wght@400;700;900&family=Noto+Serif+Bengali:wght@400;700&family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #E60023;
+            --bg-app: #f0f2f5;
+            --bg-card: #ffffff;
+            --text-main: #111111;
+            --text-muted: #5f5f5f;
+            --border: #e2e2e2;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', 'Hind Siliguri', sans-serif; }
+        body { background-color: var(--bg-app); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+        header {
+            background: var(--bg-card);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+
+        main { display: grid; grid-template-columns: 340px 1fr 280px; flex-grow: 1; overflow: hidden; }
+
+        .sidebar {
+            background: var(--bg-card);
+            overflow-y: auto;
+            padding: 15px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-right { border-right: none; border-left: 1px solid var(--border); }
+
+        .section-title {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .control-group { background: #fcfcfc; border: 1px solid #eee; padding: 10px; border-radius: 8px; }
+        .input-row { display: flex; gap: 5px; margin-bottom: 8px; align-items: center; }
+
+        label { font-size: 0.7rem; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        
+        input[type="text"], select {
+            flex-grow: 1;
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .pos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .slider-box { display: flex; flex-direction: column; }
+        .slider-box span { font-size: 0.6rem; color: #999; margin-bottom: 2px; font-weight: bold;}
+
+        input[type="range"] { accent-color: var(--primary); height: 4px; cursor: pointer; width: 100%; margin: 5px 0;}
+
+        .canvas-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #111; 
+            position: relative;
+            overflow: hidden;
+        }
+
+        #pin-canvas {
+            background: white;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            max-width: 95%;
+            max-height: 85vh; 
+            object-fit: contain;
+            cursor: move;
+        }
+
+        .ratio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 5px; }
+        .layout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        
+        .tab-card {
+            padding: 8px;
+            background: #f8f9fa;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.6rem;
+            text-align: center;
+            transition: 0.2s;
+            line-height: 1.2;
+        }
+        .tab-card.active { border-color: var(--primary); background: #fff0f1; font-weight: bold; }
+
+        .btn { padding: 6px 14px; border-radius: 4px; font-weight: 600; cursor: pointer; border: none; font-size: 0.75rem; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); }
+        .btn-sm { padding: 3px 6px; font-size: 0.65rem; background: #eee; border-radius: 4px; }
+
+        .hint-bar {
+            position: absolute;
+            bottom: 15px;
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+        }
+
+        .color-dot { width: 100%; height: 20px; border-radius: 3px; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">PinPro <span style="font-weight: 300; opacity: 0.6;">4:5 Social Studio</span></div>
+        <div class="header-actions">
+            <button class="btn btn-outline" style="margin-right: 8px;" onclick="resetAllToLayoutDefaults()">Auto-Align</button>
+            <button class="btn btn-primary" onclick="exportPin()">Download Portrait</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <div class="section-title">Headline (শিরোনাম)</div>
+            <div class="control-group">
+                <div class="input-row">
+                    <input type="text" id="input-headline" value="স্বপ্ন ছোঁয়ার গল্প" oninput="updateState('headline', this.value)">
+                    <button class="btn-sm" onclick="resetItem('headline')">⚓</button>
+                </div>
+                <div class="slider-box">
+                    <span>Font Size</span>
+                    <input type="range" min="20" max="300" value="110" id="sl-headlineSize" oninput="updateState('headlineSize', parseInt(this.value))">
+                </div>
+                <div class="pos-grid">
+                    <div class="slider-box"><span>Horizontal X</span><input type="range" min="0" max="1000" value="500" id="sl-headlineX" oninput="updateState('headlineX', parseInt(this.value))"></div>
+                    <div class="slider-box"><span>Vertical Y</span><input type="range" min="0" max="1250" value="625" id="sl-headlineY" oninput="updateState('headlineY', parseInt(this.value))"></div>
+                </div>
+            </div>
+
+            <div class="section-title">Subtitle (উপশিরোনাম)</div>
+            <div class="control-group">
+                <div class="input-row">
+                    <input type="text" id="input-subtitle" value="সফলতার সহজ কিছু নিয়ম" oninput="updateState('subtitle', this.value)">
+                    <button class="btn-sm" onclick="resetItem('subtitle')">⚓</button>
+                </div>
+                <div class="slider-box">
+                    <span>Font Size</span>
+                    <input type="range" min="10" max="150" value="45" id="sl-subtitleSize" oninput="updateState('subtitleSize', parseInt(this.value))">
+                </div>
+                <div class="pos-grid">
+                    <div class="slider-box"><span>X-Axis</span><input type="range" min="0" max="1000" value="500" id="sl-subtitleX" oninput="updateState('subtitleX', parseInt(this.value))"></div>
+                    <div class="slider-box"><span>Y-Axis</span><input type="range" min="0" max="1250" value="780" id="sl-subtitleY" oninput="updateState('subtitleY', parseInt(this.value))"></div>
+                </div>
+            </div>
+
+            <div class="section-title">Branding / Author</div>
+            <div class="control-group">
+                <div class="input-row">
+                    <input type="text" id="input-brand" value="WWW.WEBSITE.COM" oninput="updateState('brand', this.value)">
+                    <button class="btn-sm" onclick="resetItem('brand')">⚓</button>
+                </div>
+                <div class="slider-box">
+                    <span>Font Size</span>
+                    <input type="range" min="10" max="100" value="30" id="sl-brandSize" oninput="updateState('brandSize', parseInt(this.value))">
+                </div>
+                <div class="pos-grid">
+                    <div class="slider-box"><span>X-Axis</span><input type="range" min="0" max="1000" value="500" id="sl-brandX" oninput="updateState('brandX', parseInt(this.value))"></div>
+                    <div class="slider-box"><span>Y-Axis</span><input type="range" min="0" max="1250" value="80" id="sl-brandY" oninput="updateState('brandY', parseInt(this.value))"></div>
+                </div>
+            </div>
+
+            <div class="section-title">Typography & Color</div>
+            <div class="control-group">
+                <label>Font Family</label>
+                <select id="font-family" onchange="updateState('fontFamily', this.value)">
+                    <optgroup label="Bengali Fonts">
+                        <option value="Hind Siliguri">Hind Siliguri</option>
+                        <option value="Galada">Galada</option>
+                        <option value="Noto Serif Bengali">Noto Serif</option>
+                    </optgroup>
+                    <optgroup label="English Fonts">
+                        <option value="Poppins">Poppins</option>
+                        <option value="Bebas Neue">Bebas Neue</option>
+                        <option value="Playfair Display">Playfair</option>
+                    </optgroup>
+                </select>
+                <label style="margin-top:10px;">Global Color</label>
+                <div class="input-row">
+                    <input type="color" id="cp-text" value="#ffffff" oninput="updateState('textColor', this.value)">
+                    <input type="text" id="hex-text" value="#ffffff" style="max-width: 80px;" oninput="updateState('textColor', this.value)">
+                </div>
+            </div>
+        </aside>
+
+        <!-- Preview -->
+        <div class="canvas-container">
+            <canvas id="pin-canvas" width="1000" height="1250"></canvas>
+            <div class="hint-bar">Centered guideline appears when text is exactly at X=500.</div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar sidebar-right">
+            <div class="section-title">Canvas Ratio</div>
+            <div class="ratio-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                <div class="tab-card active" id="rat-4-5" onclick="setRatio('4:5')">4:5<br>Portrait</div>
+                <div class="tab-card" id="rat-2-3" onclick="setRatio('2:3')">2:3<br>Pin</div>
+                <div class="tab-card" id="rat-3-4" onclick="setRatio('3:4')">3:4<br>Book</div>
+            </div>
+
+            <div class="section-title">Background Image</div>
+            <button class="btn btn-outline" style="width:100%" onclick="document.getElementById('file-input').click()">Upload Photo</button>
+            <input type="file" id="file-input" hidden accept="image/*" onchange="handleImageUpload(event)">
+            
+            <div class="section-title" style="margin-top:10px">Overlay Preset</div>
+            <div class="layout-grid" id="layout-grid"></div>
+
+            <div class="section-title" style="margin-top:10px">Banner Color</div>
+            <div id="color-palette" style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 4px;"></div>
+            
+            <div class="section-title" style="margin-top:15px">Transparency</div>
+            <div class="control-group">
+                <label>Banner Alpha</label>
+                <input type="range" min="0" max="100" value="100" oninput="updateState('bannerOpacity', this.value/100)">
+                <label style="margin-top:10px;">Global Dim</label>
+                <input type="range" min="0" max="100" value="40" oninput="updateState('overlayOpacity', this.value/100)">
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        let state = {
+            headline: "স্বপ্ন ছোঁয়ার গল্প",
+            subtitle: "সফলতার সহজ কিছু নিয়ম",
+            brand: "WWW.WEBSITE.COM",
+            headlineX: 500, headlineY: 625, headlineSize: 110,
+            subtitleX: 500, subtitleY: 780, subtitleSize: 45,
+            brandX: 500, brandY: 80, brandSize: 30,
+            images: [],
+            layout: 'full',
+            accentColor: '#E60023',
+            textColor: '#ffffff',
+            overlayOpacity: 0.4,
+            bannerOpacity: 1.0,
+            fontFamily: 'Hind Siliguri',
+            ratio: '4:5'
+        };
+
+        let isDragging = false;
+        let dragTarget = null;
+        let startX, startY;
+        let hitZones = {};
+        let showGuideline = false;
+
+        const canvas = document.getElementById('pin-canvas');
+        const ctx = canvas.getContext('2d');
+
+        const COLORS = ['#E60023', '#000000', '#2D3436', '#0984E3', '#00B894', '#6C5CE7', '#FDCB6E', '#FF7675', '#ffffff', '#111111'];
+        const LAYOUTS = [
+            { id: 'full', name: 'Overlay' },
+            { id: 'banner-top', name: 'Top Banner' },
+            { id: 'banner-bottom', name: 'Bottom' },
+            { id: 'banners-both', name: 'Double' },
+            { id: 'banner-center', name: 'Center' },
+            { id: 'center-box', name: 'Box' }
+        ];
+
+        window.onload = () => {
+            initUI();
+            initDragEvents();
+            render();
+        };
+
+        function initUI() {
+            const palette = document.getElementById('color-palette');
+            COLORS.forEach(c => {
+                const d = document.createElement('div');
+                d.className = 'color-dot';
+                d.style.backgroundColor = c;
+                d.onclick = () => updateState('accentColor', c);
+                palette.appendChild(d);
+            });
+
+            const grid = document.getElementById('layout-grid');
+            LAYOUTS.forEach(l => {
+                const d = document.createElement('div');
+                d.className = `tab-card ${state.layout === l.id ? 'active' : ''}`;
+                d.id = `layout-${l.id}`;
+                d.innerText = l.name;
+                d.onclick = () => {
+                    document.querySelectorAll('.layout-grid .tab-card').forEach(el => el.classList.remove('active'));
+                    d.classList.add('active');
+                    updateState('layout', l.id);
+                };
+                grid.appendChild(d);
+            });
+        }
+
+        function setRatio(r) {
+            state.ratio = r;
+            let newHeight = 1250;
+            if(r === '2:3') newHeight = 1500;
+            if(r === '3:4') newHeight = 1333;
+            
+            canvas.height = newHeight;
+            
+            // Adjust slider ranges
+            document.getElementById('sl-headlineY').max = newHeight;
+            document.getElementById('sl-subtitleY').max = newHeight;
+            document.getElementById('sl-brandY').max = newHeight;
+
+            // Nudge text if now out of bounds
+            if(state.headlineY > newHeight) state.headlineY = newHeight * 0.5;
+            if(state.subtitleY > newHeight) state.subtitleY = newHeight * 0.7;
+            if(state.brandY > newHeight) state.brandY = 80;
+
+            document.getElementById('rat-4-5').classList.toggle('active', r === '4:5');
+            document.getElementById('rat-2-3').classList.toggle('active', r === '2:3');
+            document.getElementById('rat-3-4').classList.toggle('active', r === '3:4');
+            render();
+        }
+
+        function updateState(key, val) {
+            state[key] = val;
+            const sl = document.getElementById(`sl-${key}`);
+            if (sl) sl.value = val;
+            if (key === 'textColor') {
+                document.getElementById('cp-text').value = val;
+                document.getElementById('hex-text').value = val;
+            }
+            render();
+        }
+
+        function resetItem(item) {
+            updateState(item + 'X', 500);
+            const h = canvas.height;
+            if (item === 'headline') {
+                let targetY = h/2;
+                if(['banner-top', 'banners-both'].includes(state.layout)) targetY = h * 0.12;
+                else if(state.layout === 'banner-bottom') targetY = h * 0.82;
+                updateState('headlineY', targetY);
+            } else if (item === 'subtitle') {
+                updateState('subtitleY', state.headlineY + (state.headlineSize * 1.5));
+            } else if (item === 'brand') {
+                updateState('brandY', (['banner-bottom', 'banners-both'].includes(state.layout)) ? h * 0.92 : h * 0.08);
+            }
+        }
+
+        function resetAllToLayoutDefaults() {
+            resetItem('headline'); resetItem('subtitle'); resetItem('brand');
+        }
+
+        function initDragEvents() {
+            canvas.onmousedown = (e) => {
+                const pos = getMousePos(e);
+                for (let key in hitZones) {
+                    const zone = hitZones[key];
+                    if (pos.x >= zone.x && pos.x <= zone.x + zone.w && pos.y >= zone.y && pos.y <= zone.y + zone.h) {
+                        isDragging = true; dragTarget = key;
+                        startX = pos.x - state[key + 'X'];
+                        startY = pos.y - state[key + 'Y'];
+                        return;
+                    }
+                }
+            };
+            window.onmousemove = (e) => {
+                const pos = getMousePos(e);
+                if (isDragging) {
+                    let newX = Math.round(pos.x - startX);
+                    let newY = Math.round(pos.y - startY);
+                    
+                    if (Math.abs(newX - 500) < 12) { newX = 500; showGuideline = true; } 
+                    else { showGuideline = false; }
+
+                    updateState(dragTarget + 'X', newX);
+                    updateState(dragTarget + 'Y', newY);
+                } else {
+                    let hovering = false;
+                    for (let key in hitZones) {
+                        const zone = hitZones[key];
+                        if (pos.x >= zone.x && pos.x <= zone.x + zone.w && pos.y >= zone.y && pos.y <= zone.y + zone.h) {
+                            hovering = true; break;
+                        }
+                    }
+                    canvas.style.cursor = hovering ? 'move' : 'default';
+                }
+            };
+            window.onmouseup = () => { isDragging = false; dragTarget = null; showGuideline = false; render(); };
+        }
+
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: (e.clientX - rect.left) * (canvas.width / rect.width),
+                y: (e.clientY - rect.top) * (canvas.height / rect.height)
+            };
+        }
+
+        function render() {
+            const w = canvas.width, h = canvas.height;
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0,0,w,h);
+
+            if (state.images.length > 0) drawImageCover(state.images[0], 0, 0, w, h);
+
+            ctx.fillStyle = `rgba(0,0,0,${state.overlayOpacity})`;
+            ctx.fillRect(0,0,w,h);
+
+            ctx.save();
+            ctx.globalAlpha = state.bannerOpacity;
+            ctx.fillStyle = state.accentColor;
+            if (state.layout === 'banner-top') ctx.fillRect(0, 0, w, h * 0.25);
+            else if (state.layout === 'banner-bottom') ctx.fillRect(0, h * 0.75, w, h * 0.25);
+            else if (state.layout === 'banners-both') { ctx.fillRect(0,0,w,h*0.18); ctx.fillRect(0,h*0.82,w,h*0.18); }
+            else if (state.layout === 'banner-center') ctx.fillRect(0, h*0.35, w, h*0.3);
+            else if (state.layout === 'center-box') ctx.fillRect(w*0.1, h*0.3, w*0.8, h*0.4);
+            ctx.restore();
+
+            if (showGuideline) {
+                ctx.save(); ctx.setLineDash([10, 10]); ctx.strokeStyle = 'rgba(230, 0, 35, 0.8)'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(w/2, 0); ctx.lineTo(w/2, h); ctx.stroke(); ctx.restore();
+            }
+
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            hitZones = {};
+
+            // 1. Brand
+            ctx.font = `700 ${state.brandSize}px '${state.fontFamily}'`;
+            ctx.fillStyle = state.textColor;
+            ctx.fillText(state.brand, state.brandX, state.brandY);
+            hitZones.brand = { x: state.brandX - 300, y: state.brandY - state.brandSize, w: 600, h: state.brandSize * 2 };
+
+            // 2. Headline
+            ctx.font = `900 ${state.headlineSize}px '${state.fontFamily}'`;
+            wrapText(ctx, state.headline, state.headlineX, state.headlineY, w*0.88, state.headlineSize * 1.15, 'headline');
+
+            // 3. Subtitle
+            ctx.font = `400 ${state.subtitleSize}px '${state.fontFamily}'`;
+            ctx.save(); ctx.globalAlpha = 0.85;
+            if(state.subtitle) wrapText(ctx, state.subtitle, state.subtitleX, state.subtitleY, w*0.75, state.subtitleSize * 1.3, 'subtitle');
+            ctx.restore();
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight, key) {
+            const words = text.split(' '), lines = []; let line = '';
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                if (ctx.measureText(testLine).width > maxWidth && n > 0) { lines.push(line); line = words[n] + ' '; }
+                else line = testLine;
+            }
+            lines.push(line);
+            let startY = y - ((lines.length - 1) * lineHeight) / 2;
+            const currentSize = key === 'headline' ? state.headlineSize : state.subtitleSize;
+            hitZones[key] = { x: x - maxWidth/2, y: startY - currentSize/2, w: maxWidth, h: lines.length * lineHeight };
+            lines.forEach(l => { ctx.fillText(l, x, startY); startY += lineHeight; });
+        }
+
+        function drawImageCover(img, x, y, w, h) {
+            const r = img.width/img.height, cr = w/h;
+            let sx, sy, sw, sh;
+            if (r > cr) { sh = img.height; sw = sh * cr; sx = (img.width - sw)/2; sy = 0; }
+            else { sw = img.width; sh = sw/cr; sx = 0; sy = (img.height - sh)/2; }
+            ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const img = new Image();
+                img.onload = () => { state.images = [img]; render(); };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function exportPin() {
+            const link = document.createElement('a');
+            const suffix = state.ratio.replace(':', '-');
+            link.download = `portrait-${suffix}-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
+        }
+    </script>
+</body>
+</html>
