@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precision Icon Extractor</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+        :root { --primary: #6366f1; --success: #22c55e; --danger: #ef4444; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; }
+        .app-container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        
+        header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; }
+        h1 { margin: 0; font-size: 1.5rem; color: var(--primary); }
+
+        .main-layout { display: grid; grid-template-columns: 1fr 250px; gap: 20px; }
+        @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; } }
+
+        /* Cropper Area */
+        .cropper-column { display: flex; flex-direction: column; gap: 15px; }
+        #cropperWrapper { width: 100%; height: 500px; background: #f1f5f9; border-radius: 12px; overflow: hidden; border: 2px dashed #cbd5e1; display: none; }
+        img { display: block; max-width: 100%; }
+
+        /* Sidebar & Preview */
+        .sidebar { background: #f1f5f9; padding: 15px; border-radius: 12px; display: none; }
+        
+        /* THE PREVIEW BOX WITH GUIDES */
+        .preview-container { position: relative; width: 180px; height: 180px; margin: 0 auto 15px; }
+        .preview-box { width: 100%; height: 100%; background: #fff; border: 1px solid #cbd5e1; overflow: hidden; position: relative; }
+        
+        /* Guide Lines */
+        .guide-v, .guide-h, .guide-center {
+            position: absolute;
+            background: rgba(255, 0, 255, 0.6); /* Magenta color for high visibility */
+            pointer-events: none; /* Clicks go through the lines */
+            z-index: 100;
+            display: block; /* Controlled by JS toggle */
+        }
+        .guide-v { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%); }
+        .guide-h { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); }
+        .guide-center { 
+            left: 50%; top: 50%; width: 6px; height: 6px; 
+            border-radius: 50%; border: 1px solid white;
+            transform: translate(-50%, -50%); 
+        }
+
+        .label-text { font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 5px; display: block; }
+        
+        .btn { width: 100%; padding: 10px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; margin-bottom: 10px; transition: 0.2s; }
+        .btn-upload { background: var(--primary); color: white; }
+        .btn-capture { background: var(--success); color: white; font-size: 1rem; }
+        .btn-zip { background: #0f172a; color: white; }
+        .btn-clear { background: #cbd5e1; color: #475569; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .size-options { display: flex; gap: 5px; margin-bottom: 15px; }
+        .size-btn { flex: 1; font-size: 0.7rem; padding: 5px; background: white; border: 1px solid #cbd5e1; cursor: pointer; border-radius: 4px; }
+        .size-btn.active { border-color: var(--primary); background: #e0e7ff; color: var(--primary); }
+
+        /* Gallery */
+        .gallery { margin-top: 25px; padding-top: 20px; border-top: 2px solid #f1f5f9; }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; margin-top: 15px; }
+        .gallery-item { position: relative; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 5px; }
+        .gallery-item img { width: 100%; border-radius: 4px; }
+        .remove-btn { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h1>Precision Icon Extractor</h1>
+        </header>
+
+        <div id="uploadStep" style="text-align: center; padding: 40px 0;">
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            <button class="btn btn-upload" style="width: auto; padding: 15px 40px;" onclick="document.getElementById('fileInput').click()">📁 Step 1: Select Image</button>
+        </div>
+
+        <div class="main-layout">
+            <div class="cropper-column">
+                <div id="cropperWrapper">
+                    <img id="imageToCrop">
+                </div>
+            </div>
+
+            <div id="sidebar" class="sidebar">
+                <span class="label-text">Live Centering Preview</span>
+                <div class="preview-container">
+                    <div class="preview-box" id="preview"></div>
+                    <!-- The Guides -->
+                    <div class="guide-v guide"></div>
+                    <div class="guide-h guide"></div>
+                    <div class="guide-center guide"></div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <input type="checkbox" id="toggleGuides" checked>
+                    <label for="toggleGuides" style="font-size: 0.8rem; cursor: pointer;">Show Guides</label>
+                </div>
+
+                <span class="label-text">Export Resolution</span>
+                <div class="size-options">
+                    <button class="size-btn" onclick="setRes(128, this)">128px</button>
+                    <button class="size-btn active" onclick="setRes(256, this)">256px</button>
+                    <button class="size-btn" onclick="setRes(512, this)">512px</button>
+                </div>
+
+                <button id="captureBtn" class="btn btn-capture">📸 Step 2: Capture Icon</button>
+                <button id="zipBtn" class="btn btn-zip" style="display: none;">📦 Step 3: Download ZIP</button>
+                <button id="clearBtn" class="btn btn-clear" style="display: none;">🗑️ Clear All</button>
+            </div>
+        </div>
+
+        <div id="gallery" class="gallery" style="display: none;">
+            <span class="label-text">Captured Gallery (<span id="count">0</span>)</span>
+            <div id="galleryGrid" class="gallery-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        let cropper;
+        let capturedIcons = [];
+        let exportSize = 256;
+
+        const fileInput = document.getElementById('fileInput');
+        const image = document.getElementById('imageToCrop');
+        const sidebar = document.getElementById('sidebar');
+        const cropperWrapper = document.getElementById('cropperWrapper');
+        const gallery = document.getElementById('gallery');
+        const galleryGrid = document.getElementById('galleryGrid');
+        const toggleGuides = document.getElementById('toggleGuides');
+
+        // Handle Guide Toggle
+        toggleGuides.addEventListener('change', (e) => {
+            document.querySelectorAll('.guide').forEach(el => {
+                el.style.display = e.target.checked ? 'block' : 'none';
+            });
+        });
+
+        // Handle Image Upload
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                if (cropper) cropper.destroy();
+                
+                image.src = event.target.result;
+                cropperWrapper.style.display = 'block';
+                sidebar.style.display = 'block';
+                document.getElementById('uploadStep').style.display = 'none';
+
+                cropper = new Cropper(image, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    preview: '#preview',
+                    autoCropArea: 0.2, // Start smaller, better for icons
+                    ready() {
+                        // This ensures the preview is initialized correctly
+                    }
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function setRes(size, btn) {
+            exportSize = size;
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        document.getElementById('captureBtn').addEventListener('click', () => {
+            if (!cropper) return;
+            const canvas = cropper.getCroppedCanvas({ width: exportSize, height: exportSize });
+            canvas.toBlob((blob) => {
+                const id = Date.now();
+                const url = URL.createObjectURL(blob);
+                capturedIcons.push({ id, blob, url });
+                renderGallery();
+            }, 'image/png');
+        });
+
+        function renderGallery() {
+            galleryGrid.innerHTML = '';
+            capturedIcons.forEach(icon => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.innerHTML = `<img src="${icon.url}"><button class="remove-btn" onclick="removeIcon(${icon.id})">×</button>`;
+                galleryGrid.appendChild(div);
+            });
+            const hasItems = capturedIcons.length > 0;
+            gallery.style.display = hasItems ? 'block' : 'none';
+            document.getElementById('zipBtn').style.display = hasItems ? 'block' : 'none';
+            document.getElementById('clearBtn').style.display = hasItems ? 'block' : 'none';
+            document.getElementById('count').innerText = capturedIcons.length;
+        }
+
+        function removeIcon(id) {
+            capturedIcons = capturedIcons.filter(i => i.id !== id);
+            renderGallery();
+        }
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            capturedIcons = [];
+            renderGallery();
+        });
+
+        document.getElementById('zipBtn').addEventListener('click', async () => {
+            const zip = new JSZip();
+            capturedIcons.forEach((icon, i) => {
+                zip.file(`icon-${i+1}.png`, icon.blob);
+            });
+            const content = await zip.generateAsync({type:"blob"});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = "captured_icons.zip";
+            link.click();
+        });
+    </script>
+</body>
+</html>
