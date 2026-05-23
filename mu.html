@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Premium Editorial Mockup</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:#050505;
+    color:white;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    display:flex;
+    height:100vh;
+    overflow:hidden;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:320px;
+    background:#101010;
+    border-right:1px solid #222;
+    padding:40px;
+    display:flex;
+    flex-direction:column;
+    z-index:10;
+}
+
+.sidebar h1{
+    margin:0;
+    font-size:12px;
+    letter-spacing:4px;
+    text-transform:uppercase;
+}
+
+.sidebar p{
+    margin-top:10px;
+    margin-bottom:40px;
+    color:#666;
+    font-size:11px;
+}
+
+.upload{
+    border:1px dashed #333;
+    padding:50px 20px;
+    text-align:center;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.upload:hover{
+    border-color:white;
+    background:rgba(255,255,255,0.03);
+}
+
+.upload span{
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+
+#fileInput{
+    display:none;
+}
+
+button{
+    margin-top:30px;
+    border:none;
+    background:white;
+    color:black;
+    padding:18px;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    cursor:pointer;
+}
+
+button:disabled{
+    opacity:0.25;
+    cursor:not-allowed;
+}
+
+/* VIEWPORT */
+
+.viewport{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    position:relative;
+
+    background:#080808;
+
+    background-image:
+        linear-gradient(45deg,#0d0d0d 25%,transparent 25%),
+        linear-gradient(-45deg,#0d0d0d 25%,transparent 25%),
+        linear-gradient(45deg,transparent 75%,#0d0d0d 75%),
+        linear-gradient(-45deg,transparent 75%,#0d0d0d 75%);
+
+    background-size:30px 30px;
+    background-position:0 0,0 15px,15px -15px,-15px 0;
+}
+
+/* 3D SCENE */
+
+.scene{
+    width:700px;
+    height:900px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    perspective:1800px;
+}
+
+/* BOOK */
+
+.book-wrap{
+    position:relative;
+
+    width:430px;
+    height:602px;
+
+    transform-style:preserve-3d;
+
+    /* BALANCED PERSPECTIVE */
+
+    transform:
+        rotateX(2deg)
+        rotateY(-4deg)
+        rotateZ(-7deg);
+}
+
+/* SHADOW */
+
+.shadow{
+    position:absolute;
+    inset:0;
+
+    background:black;
+
+    filter:blur(55px);
+
+    opacity:0.38;
+
+    transform:
+        translateZ(-40px)
+        translateX(-4px)
+        translateY(36px)
+        scale(0.96);
+}
+
+/* BOOK BODY */
+
+.book{
+    position:absolute;
+    inset:0;
+
+    overflow:hidden;
+
+    background:#111;
+
+    box-shadow:
+        0 35px 90px rgba(0,0,0,0.48),
+        inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+/* SPINE */
+
+.book::before{
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:-7px;
+
+    width:7px;
+    height:100%;
+
+    background:
+        linear-gradient(
+            to right,
+            #090909,
+            #1b1b1b
+        );
+}
+
+/* COVER IMAGE */
+
+.cover{
+    position:absolute;
+    inset:0;
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+/* MATTE LIGHT */
+
+.light{
+    position:absolute;
+    inset:0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.14) 0%,
+            rgba(255,255,255,0.03) 30%,
+            rgba(0,0,0,0.02) 58%,
+            rgba(0,0,0,0.18) 100%
+        );
+}
+
+/* SPINE EDGE */
+
+.edge{
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:1px;
+    height:100%;
+
+    background:rgba(255,255,255,0.08);
+}
+
+canvas{
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <h1>Editorial Studio</h1>
+
+    <p>
+        Premium Kindle / eBook Mockup
+    </p>
+
+    <label class="upload">
+        <span>Upload Cover</span>
+        <input type="file" id="fileInput" accept="image/*">
+    </label>
+
+    <button id="downloadBtn" disabled>
+        Download PNG
+    </button>
+
+</div>
+
+<!-- VIEWPORT -->
+
+<div class="viewport">
+
+    <div class="scene">
+
+        <div class="book-wrap">
+
+            <div class="shadow"></div>
+
+            <div class="book">
+
+                <div class="cover" id="cover"></div>
+
+                <div class="light"></div>
+
+                <div class="edge"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- EXPORT CANVAS -->
+
+<canvas id="exportCanvas"></canvas>
+
+<script>
+
+const fileInput = document.getElementById('fileInput');
+const cover = document.getElementById('cover');
+const downloadBtn = document.getElementById('downloadBtn');
+
+let imageURL = null;
+
+/* IMAGE UPLOAD */
+
+fileInput.addEventListener('change', e=>{
+
+    const file = e.target.files[0];
+
+    if(!file) return;
+
+    imageURL = URL.createObjectURL(file);
+
+    cover.style.backgroundImage = `url(${imageURL})`;
+
+    downloadBtn.disabled = false;
+});
+
+/* EXPORT */
+
+downloadBtn.addEventListener('click', ()=>{
+
+    const canvas = document.getElementById('exportCanvas');
+
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = 3000;
+    canvas.height = 2250;
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    const img = new Image();
+
+    img.crossOrigin = 'anonymous';
+
+    img.onload = ()=>{
+
+        ctx.save();
+
+        ctx.translate(1500,1125);
+
+        /* BALANCED ROTATION */
+
+        ctx.rotate(-7 * Math.PI / 180);
+
+        /* VERY SUBTLE PERSPECTIVE */
+
+        ctx.transform(1,0,-0.035,1,0,0);
+
+        const w = 1060;
+        const h = 1484;
+
+        /* SHADOW */
+
+        ctx.save();
+
+        ctx.shadowColor = 'rgba(0,0,0,0.45)';
+        ctx.shadowBlur = 120;
+        ctx.shadowOffsetY = 42;
+
+        ctx.fillRect(
+            -w/2,
+            -h/2,
+            w,
+            h
+        );
+
+        ctx.restore();
+
+        /* SPINE */
+
+        ctx.fillStyle = '#111';
+
+        ctx.fillRect(
+            -w/2 - 12,
+            -h/2,
+            12,
+            h
+        );
+
+        /* COVER */
+
+        ctx.drawImage(
+            img,
+            -w/2,
+            -h/2,
+            w,
+            h
+        );
+
+        /* MATTE LIGHT */
+
+        const grad = ctx.createLinearGradient(
+            -w/2,
+            0,
+            w/2,
+            0
+        );
+
+        grad.addColorStop(
+            0,
+            'rgba(255,255,255,0.14)'
+        );
+
+        grad.addColorStop(
+            0.32,
+            'rgba(255,255,255,0.03)'
+        );
+
+        grad.addColorStop(
+            1,
+            'rgba(0,0,0,0.18)'
+        );
+
+        ctx.fillStyle = grad;
+
+        ctx.fillRect(
+            -w/2,
+            -h/2,
+            w,
+            h
+        );
+
+        /* SPINE HIGHLIGHT */
+
+        ctx.strokeStyle =
+            'rgba(255,255,255,0.08)';
+
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+
+        ctx.moveTo(-w/2, -h/2);
+        ctx.lineTo(-w/2, h/2);
+
+        ctx.stroke();
+
+        ctx.restore();
+
+        /* EXPORT PNG */
+
+        const a = document.createElement('a');
+
+        a.download =
+            'premium-editorial-mockup.png';
+
+        a.href =
+            canvas.toDataURL('image/png');
+
+        a.click();
+    };
+
+    img.src = imageURL;
+});
+
+</script>
+
+</body>
+</html>
