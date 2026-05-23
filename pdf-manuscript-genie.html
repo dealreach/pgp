@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PDF Manuscript Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #020617;
+      --bg-gradient-end: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #22d3ee;
+      --accent-hover: #67e8f9;
+      --accent-success: #10b981;
+      --code-bg: rgba(0, 0, 0, 0.3);
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      --input-bg: rgba(15, 23, 42, 0.6);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: fixed linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 60px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .sub-header {
+      color: var(--accent-primary);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+
+    /* Input Grid Section */
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      letter-spacing: 0.05em;
+    }
+
+    textarea {
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      resize: vertical;
+      min-height: 80px;
+      transition: all 0.3s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2);
+    }
+
+    /* Prompt Result Section */
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      margin-top: 20px;
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .step-label {
+      font-weight: 800;
+      font-size: 0.85rem;
+      background: var(--accent-primary);
+      color: #020617;
+      padding: 4px 14px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .prompt-content {
+      background: var(--code-bg);
+      padding: 25px;
+      border-radius: 12px;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 1.05rem;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 20px;
+      line-height: 1.5;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .copy-btn {
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-primary);
+      color: #020617;
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: white;
+    }
+
+    .footer {
+      margin-top: 80px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .input-grid { grid-template-columns: 1fr; }
+      .full-width { grid-column: span 1; }
+      h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>PDF Manuscript Genie</h1>
+      <p class="sub-header">Craft Premium Digital Product PDF Content</p>
+    </header>
+
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Product Title</label>
+        <textarea id="val1" placeholder="e.g. The Ultimate SEO Blueprint" oninput="updatePrompt()"></textarea>
+      </div>
+      <div class="input-group">
+        <label>Product Type</label>
+        <textarea id="val2" placeholder="e.g. Masterclass, Checklist, Guide" oninput="updatePrompt()"></textarea>
+      </div>
+      <div class="input-group">
+        <label>Target Audience</label>
+        <textarea id="val3" placeholder="e.g. Freelance Copywriters" oninput="updatePrompt()"></textarea>
+      </div>
+      <div class="input-group">
+        <label>Brand Tone</label>
+        <textarea id="val4" placeholder="e.g. Modern, Minimalist, Authoritative" oninput="updatePrompt()"></textarea>
+      </div>
+      <div class="input-group full-width">
+        <label>The Actual Prompt</label>
+        <textarea id="val5" placeholder="Paste the prompt you are including in the PDF here..." oninput="updatePrompt()"></textarea>
+      </div>
+      <div class="input-group full-width">
+        <label>Call To Action (CTA)</label>
+        <textarea id="val6" placeholder="e.g. Join our VIP community for weekly updates" oninput="updatePrompt()"></textarea>
+      </div>
+    </div>
+
+    <div class="prompt-workflow">
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-label">Generated PDF Creator Prompt</span>
+        </div>
+        <div class="prompt-content" id="finalPrompt">Loading template...</div>
+        <button class="copy-btn" onclick="copyPrompt('finalPrompt', this)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Copy Complete Prompt</span>
+        </button>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    const template = `You are a premium digital product copywriter and PDF content creator.
+
+Your task is to create the complete content of a concise, high-quality PDF document for a digital AI prompt product.
+
+GOAL
+The PDF should feel premium, clean, valuable, and immediately actionable while remaining concise, polished, and easy to consume.
+
+TARGET AUDIENCE
+People who downloaded, purchased, or claimed this AI prompt as a freebie.
+
+TONE & STYLE
+- Professional but friendly
+- Concise and clear
+- Modern digital-product style
+- Easy to skim
+- Premium and polished
+- Beginner-friendly
+- Action-oriented
+- Minimal fluff
+- Avoid robotic language
+
+LENGTH REQUIREMENTS
+- Prioritize brevity over comprehensiveness
+- Keep the final content concise enough to fit into a clean 1–3 page PDF
+- Avoid unnecessary explanations
+- Avoid repetition
+
+OUTPUT FORMAT
+Write the complete PDF content using the following structure:
+
+--------------------------------------------------
+1. SHORT THANK YOU + TRANSITION
+--------------------------------------------------
+Write:
+- A short thank-you message
+- A smooth transition into using the prompt
+- A subtle excitement or motivational hook
+
+Requirements:
+- Keep this section concise
+- Make the reader eager to try the prompt immediately
+
+--------------------------------------------------
+2. HOW TO USE THE PROMPT
+--------------------------------------------------
+Write a short step-by-step guide.
+
+Requirements:
+- Use numbered steps
+- Keep each step concise
+- Make it beginner-friendly
+- Explain exactly how to use the prompt effectively
+- Include practical usage tips if necessary
+- Focus on clarity and actionability
+
+--------------------------------------------------
+3. THE PROMPT
+--------------------------------------------------
+Insert and properly format the following prompt exactly as provided:
+
+[PROMPT]
+
+Requirements:
+- Preserve the original prompt exactly
+- Do not modify the prompt unless instructed
+- Place the prompt inside a clearly separated copy-friendly block
+- Ensure the formatting is clean and easy to copy
+
+--------------------------------------------------
+4. CALL TO ACTION
+--------------------------------------------------
+Write a short but persuasive CTA section using the following information:
+
+[CALL TO ACTION]
+
+Requirements:
+- Keep it concise
+- Make it compelling and action-oriented
+- Encourage immediate engagement or next steps
+- Create momentum and curiosity
+
+--------------------------------------------------
+FORMATTING REQUIREMENTS
+--------------------------------------------------
+- Use clear section headings
+- Use clean spacing
+- Make the layout visually organized
+- Avoid walls of text
+- Write in a format that looks premium in a minimalist PDF layout
+- Ensure the final output is fully ready to paste into a PDF design
+- Do not include meta commentary
+- Do not explain what you are doing
+- Only provide the final PDF-ready content
+
+--------------------------------------------------
+PRODUCT INFORMATION
+--------------------------------------------------
+
+Product Title:
+[PRODUCT_TITLE]
+
+Product Type:
+[PRODUCT_TYPE]
+
+Target Audience:
+[TARGET_AUDIENCE]
+
+Brand Tone:
+[BRAND_TONE]
+
+Prompt:
+[ACTUAL_PROMPT]
+
+Call To Action:
+[CTA_VAL]`;
+
+    function updatePrompt() {
+      let updated = template;
+      
+      const val1 = document.getElementById('val1').value || "[INSERT PRODUCT TITLE]";
+      const val2 = document.getElementById('val2').value || "[INSERT PRODUCT TYPE]";
+      const val3 = document.getElementById('val3').value || "[INSERT TARGET AUDIENCE]";
+      const val4 = document.getElementById('val4').value || "[INSERT BRAND TONE]";
+      const val5 = document.getElementById('val5').value || "[INSERT THE ACTUAL PROMPT]";
+      const val6 = document.getElementById('val6').value || "[INSERT CTA]";
+
+      updated = updated.replace('[PRODUCT_TITLE]', val1);
+      updated = updated.replace('[PRODUCT_TYPE]', val2);
+      updated = updated.replace('[TARGET_AUDIENCE]', val3);
+      updated = updated.replace('[BRAND_TONE]', val4);
+      updated = updated.replace('[ACTUAL_PROMPT]', val5);
+      updated = updated.replace('[CTA_VAL]', val6);
+      
+      // Also update the placeholders in Section 3 and 4 of the template instructions
+      updated = updated.replace('[PROMPT]', val5);
+      updated = updated.replace('[CALL TO ACTION]', val6);
+
+      document.getElementById('finalPrompt').innerText = updated;
+    }
+
+    function copyPrompt(id, btn) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<span>Copied to Clipboard!</span>`;
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Initial load
+    updatePrompt();
+  </script>
+</body>
+</html>
