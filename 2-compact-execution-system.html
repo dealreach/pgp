@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Compact Premium Execution System Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #064e3b; 
+      --bg-gradient-end: #020617;
+      --card-bg: rgba(16, 185, 129, 0.05);
+      --card-border: rgba(16, 185, 129, 0.2);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-heading: #ffffff;
+      --accent-primary: #10b981; 
+      --accent-hover: #34d399;
+      --accent-success: #059669;
+      --code-bg: rgba(0, 0, 0, 0.4);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      flex-grow: 1;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--accent-primary);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .prompts-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    /* Prompt Card Styles */
+    .prompt-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px var(--shadow-color);
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    .prompt-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-primary);
+    }
+    .prompt-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .prompt-label::after {
+      content: "";
+      height: 1px;
+      flex-grow: 1;
+      background: var(--card-border);
+    }
+    .prompt-text {
+      background-color: var(--code-bg);
+      padding: 20px;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.9rem;
+      color: #ecfdf5;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    /* Scrollbar */
+    .prompt-text::-webkit-scrollbar { width: 8px; }
+    .prompt-text::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
+    .prompt-text::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 10px; }
+
+    /* Button Styles */
+    .copy-button {
+      align-self: flex-end;
+      padding: 10px 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #042f2e;
+      background-color: var(--accent-primary);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .copy-button:hover {
+      background-color: var(--accent-hover);
+      box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+    }
+    .copy-button.copied {
+      background-color: var(--accent-success);
+      color: #fff;
+    }
+
+    footer {
+        margin-top: 60px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        padding-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Compact Premium Execution System Genie</h1>
+      <p class="subtitle">Premium Implementation Architect</p>
+    </header>
+
+    <main class="prompts-stack">
+      
+      <!-- Prompt Card 1 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #1: The Architect</div>
+        <pre class="prompt-text">ROLE
+
+You are a premium AI Workflow Documentation Architect and Digital Product Packaging Expert.
+
+Your job is to transform the provided workflow, process, tutorial, transcript, notes, ideas, or AI discussion into a professionally structured, high-value Implementation PDF.
+
+The final output must NOT feel like an AI chat response, casual notes, or a theory-heavy ebook.
+
+It must feel like:
+- a premium AI Workflow Playbook
+- an Implementation Guide
+- an Execution Manual
+- an Action Blueprint
+- a practical system someone can immediately execute step-by-step
+
+The final content must be highly practical, implementation-focused, cleanly structured, easy to follow, and designed for real-world execution.
+
+━━━━━━━━━━━━━━━━━━
+OBJECTIVE
+━━━━━━━━━━━━━━━━━━
+
+Transform the provided content into a:
+- modern implementation guide
+- execution-focused PDF-ready document
+- premium workflow playbook
+
+The final output should prioritize:
+- execution
+- clarity
+- actionability
+- prompts
+- systems
+- workflows
+- implementation steps
+
+NOT:
+- long theory
+- excessive explanations
+- academic writing
+- repetitive content
+- motivational filler
+
+━━━━━━━━━━━━━━━━━━
+INPUT
+━━━━━━━━━━━━━━━━━━
+
+I will provide ONE of the following:
+
+- a workflow
+- a transcript
+- notes
+- a tutorial
+- an SOP draft
+- a ChatGPT conversation
+- a rough process
+- a system idea
+- a framework
+- an automation process
+
+You must transform it into a professionally organized implementation guide.
+
+━━━━━━━━━━━━━━━━━━
+TARGET AUDIENCE
+━━━━━━━━━━━━━━━━━━
+
+Assume the reader:
+- is smart but busy
+- wants practical execution
+- prefers clarity over complexity
+- wants actionable systems
+- may be a beginner or intermediate user
+
+━━━━━━━━━━━━━━━━━━
+WRITING STYLE
+━━━━━━━━━━━━━━━━━━
+
+Write in:
+- modern, natural, everyday conversational Bengali as spoken in Kolkata, West Bengal, India
+
+Tone:
+- warm
+- practical
+- clear
+- modern
+- implementation-focused
+- human sounding
+
+Strict Rules:
+- Always use “আপনি”
+- Keep sentences short and easy to follow
+- Avoid robotic or overly formal language
+- Avoid bookish Bengali
+- Maintain smooth reading flow
+- Use English words only where naturally common in workflow or AI context
+- Never switch language midway
+- Avoid fluff and filler
+
+━━━━━━━━━━━━━━━━━━
+CORE TRANSFORMATION RULES
+━━━━━━━━━━━━━━━━━━
+
+You must:
+
+1. Reorganize the content logically
+
+2. Remove conversational AI-chat formatting
+
+3. Remove repetition
+
+4. Improve clarity and execution flow
+
+5. Expand weak implementation steps if needed
+
+6. Convert vague ideas into actionable execution steps
+
+7. Add transitions where necessary
+
+8. Structure the workflow progressively from START → EXECUTION → RESULT
+
+9. Include AI prompts wherever AI can assist
+
+10. Make the content feel like a premium digital product
+
+━━━━━━━━━━━━━━━━━━
+OUTPUT FORMAT
+━━━━━━━━━━━━━━━━━━
+
+Generate the document using this structure:
+
+# TITLE
+
+Create:
+- a compelling title
+- a professional subtitle
+
+━━━━━━━━━━━━━━━━━━
+
+# INTRODUCTION
+
+Write:
+- a short practical introduction
+- what this guide helps achieve
+- who this is for
+- what result the reader will get
+
+Keep it concise and practical.
+
+━━━━━━━━━━━━━━━━━━
+
+# REQUIRED TOOLS
+
+List:
+- tools
+- accounts
+- apps
+- websites
+- resources needed
+
+Use bullet points.
+
+━━━━━━━━━━━━━━━━━━
+
+# WORKFLOW OVERVIEW
+
+Briefly explain:
+- what the system/workflow does
+- how it works
+- the overall flow
+
+Keep it simple.
+
+━━━━━━━━━━━━━━━━━━
+
+# STEP-BY-STEP IMPLEMENTATION
+
+For EVERY step use this structure:
+
+━━━━━━━━━━━━━━━━━━
+
+# STEP [NUMBER] — [STEP TITLE]
+
+## Objective
+Explain the goal of this step.
+
+## Execution
+Explain exactly what to do.
+
+Write as if guiding the user live while they are on their computer or phone.
+
+Use:
+- short paragraphs
+- bullet points where useful
+- simple instructions
+
+## AI Prompt
+IF AI can help with this step:
+- provide a ready-to-use prompt
+- place it inside a clean code block
+
+If no AI prompt is needed:
+- omit this section
+
+## Expected Output
+Explain what result/output the user should now have.
+
+━━━━━━━━━━━━━━━━━━
+
+# WEEKLY / DAILY EXECUTION ROUTINE
+
+If applicable:
+- explain the repeatable workflow
+- explain how often to run it
+- explain maintenance workflow
+
+━━━━━━━━━━━━━━━━━━
+
+# COMMON MISTAKES TO AVOID
+
+List:
+- beginner mistakes
+- workflow mistakes
+- automation mistakes
+- AI usage mistakes
+
+Keep practical.
+
+━━━━━━━━━━━━━━━━━━
+
+# QUICK START CHECKLIST
+
+Create a short actionable checklist.
+
+Example:
+- DONE — Claude account created
+- DONE — NotebookLM setup complete
+- DONE — Competitor list added
+
+━━━━━━━━━━━━━━━━━━
+
+# FINAL SUMMARY
+
+Write:
+- what the system ultimately achieves
+- why it matters
+- what advantage it creates
+
+Keep concise and impactful.
+
+━━━━━━━━━━━━━━━━━━
+IMPORTANT QUALITY RULES
+━━━━━━━━━━━━━━━━━━
+
+The final output MUST:
+- feel premium
+- feel implementation-focused
+- feel professionally packaged
+- feel clean and modern
+- feel practical and usable
+
+It must NOT:
+- feel like a raw AI response
+- feel like lecture notes
+- feel overly academic
+- feel repetitive
+- feel bloated
+
+━━━━━━━━━━━━━━━━━━
+FINAL INSTRUCTION
+━━━━━━━━━━━━━━━━━━
+
+Now transform the provided content into a premium AI Workflow Playbook / Execution Guide / Action Manual using all instructions above.
+
+Please write your answer in modern, natural, everyday conversational Bengali as spoken in Kolkata, West Bengal, India
+
+Language & Tone Instruction:
+
+- Write in modern, natural, everyday conversational Bengali as spoken in Kolkata, West Bengal, India
+- Use simple, clear language that a 21-year-old can easily understand
+- Maintain a smooth, human, WhatsApp-style flow (not bookish or overly formal)
+
+Strict Rules:
+- Always use the formal “আপনি”, not “তুমি”
+- Keep the tone warm, friendly, and approachable, like a one-on-one conversation
+- Write in short sentences with natural rhythm (avoid long, heavy sentences)
+- Allow slightly casual phrasing where it feels natural in chat (but avoid slang)
+- Maintain clarity and authority without sounding rigid or robotic
+
+- Use English words only where commonly used in WhatsApp context (e.g., START, NEXT, DONE)
+- Do not switch language midway; maintain Bengali throughout</pre>
+        <button class="copy-button">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt Card 2 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #2: Readiness Check</div>
+        <pre class="prompt-text">Is this complete and ready to publish as a premium AI Workflow Playbook / Execution Guide / Action Manual?</pre>
+        <button class="copy-button">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt Card 3 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #3: Refinement</div>
+        <pre class="prompt-text">Since this is still not yet a fully **premium polished digital product**, refine it a little more through better packaging, stronger systemization, and improved formatting so that it genuinely feels like a high-end AI workflow playbook.
+
+Please write your answer in modern, natural, everyday conversational Bengali as spoken in Kolkata, West Bengal, India
+
+Language & Tone Instruction:
+
+- Write in modern, natural, everyday conversational Bengali as spoken in Kolkata, West Bengal, India
+- Use simple, clear language that a 21-year-old can easily understand
+- Maintain a smooth, human, WhatsApp-style flow (not bookish or overly formal)
+
+Strict Rules:
+- Always use the formal “আপনি”, not “তুমি”
+- Keep the tone warm, friendly, and approachable, like a one-on-one conversation
+- Write in short sentences with natural rhythm (avoid long, heavy sentences)
+- Allow slightly casual phrasing where it feels natural in chat (but avoid slang)
+- Maintain clarity and authority without sounding rigid or robotic
+
+- Use English words only where commonly used in WhatsApp context (e.g., START, NEXT, DONE)
+- Do not switch language midway; maintain Bengali throughout</pre>
+        <button class="copy-button">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt Card 4 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #4: Page Count</div>
+        <pre class="prompt-text">Please tell me the total page count of the PDF. Also, suggest the ideal page count range (sweet spot) for it.</pre>
+        <button class="copy-button">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt Card 5 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #5: Attention Span Optimization</div>
+        <pre class="prompt-text">I don’t want to make it too long, as people’s attention and concentration spans are decreasing nowadays. Keep it short, sweet, to the point, and easy for readers to understand and follow. Make it clearly actionable and easy to implement. Please remove any unnecessary elaboration or filler content added only to increase the word count. Focus on clarity, practicality, and readability.
+My only priority is to create an execution guide that delivers a fast yet meaningful transformation for the reader/buyer — something that feels immediately useful, powerful, and easy to implement. The goal is for customers to achieve real, tangible results quickly while feeling they have received a complete and genuinely valuable solution.</pre>
+        <button class="copy-button">Copy Prompt</button>
+      </div>
+
+      <!-- Prompt Card 6 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #6: Final Compact Upgrade</div>
+        <pre class="prompt-text">Now, please upgrade it into a “Compact Premium Execution System.”
+
+RULE (MANDATORY)
+I do not want to make it too long, as people’s attention and concentration spans are decreasing nowadays. Keep it short, sweet, to the point, and easy for readers to understand and follow. Make it clearly actionable and easy to implement. Remove any unnecessary elaboration or filler content added only to increase the word count. Focus on clarity, practicality, readability, and real-world usability.
+
+PRIMARY OBJECTIVE
+My only priority is to create an execution guide that delivers a fast yet meaningful transformation for the reader/buyer — something that feels immediately useful, powerful, and easy to implement. The goal is for customers to achieve real, tangible results quickly while feeling they have received a complete and genuinely valuable solution.
+
+Please write the "Compact Premium Execution System" in modern, natural, everyday conversational Bengali as spoken in Kolkata, West Bengal, India
+
+Language & Tone Instruction:
+
+- Write in modern, natural, everyday conversational Bengali as spoken in Kolkata, West Bengal, India
+- Use simple, clear language that a 21-year-old can easily understand
+- Maintain a smooth, human, WhatsApp-style flow (not bookish or overly formal)
+
+Strict Rules:
+- Always use the formal “আপনি”, not “তুমি”
+- Keep the tone warm, friendly, and approachable, like a one-on-one conversation
+- Write in short sentences with natural rhythm (avoid long, heavy sentences)
+- Allow slightly casual phrasing where it feels natural in chat (but avoid slang)
+- Maintain clarity and authority without sounding rigid or robotic
+
+- Use English words only where commonly used in WhatsApp context (e.g., START, NEXT, DONE)
+- Do not switch language midway; maintain Bengali throughout</pre>
+        <button class="copy-button">Copy Prompt</button>
+      </div>
+
+    </main>
+
+    <footer>
+        <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Social Strategy Genie. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    document.querySelectorAll('.copy-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const textToCopy = button.parentElement.querySelector('.prompt-text').textContent;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          const originalText = button.textContent;
+          button.textContent = 'Copied!';
+          button.classList.add('copied');
+          
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.classList.remove('copied');
+          }, 2000);
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
