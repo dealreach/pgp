@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Short Story Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #020617;
+      --bg-gradient-end: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #22d3ee;
+      --accent-hover: #67e8f9;
+      --accent-success: #10b981;
+      --code-bg: rgba(0, 0, 0, 0.3);
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: fixed linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 60px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .sub-header {
+      color: var(--accent-primary);
+      font-size: 1rem;
+      font-weight: 600;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.4;
+    }
+
+    .prompt-workflow {
+      display: flex;
+      flex-direction: column;
+      gap: 35px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 35px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .step-label {
+      font-weight: 800;
+      font-size: 0.85rem;
+      background: var(--accent-primary);
+      color: #020617;
+      padding: 6px 16px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .prompt-content {
+      background: var(--code-bg);
+      padding: 25px;
+      border-radius: 16px;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 1rem;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .copy-btn {
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+      padding: 12px 30px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      width: fit-content;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-primary);
+      color: #020617;
+      transform: translateY(-2px);
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: white;
+    }
+
+    .footer {
+      margin-top: 100px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.8rem; }
+      .step-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Short Story (Plotter + Story Bible Hybrid Method)</h1>
+      <p class="sub-header">Flash Fiction: 3–5 scenes | Short Story: 5–10 scenes | Long Short Story: 10–15 scenes<br>Act I: Setup + Emotional Hook | Act II: Escalation + Pressure | Act III: Emotional Collision + Resolution</p>
+    </header>
+
+    <div class="prompt-workflow">
+      
+      <!-- Prompt #1 -->
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-label">Prompt #1: Core Emotional Premise</span>
+        </div>
+        <div class="prompt-content" id="p1">আমি একটি ছোটোগল্প লিখতে চাই।
+
+আমাকে সাহায্য করুন গল্পের “core emotional premise” বের করতে।
+
+নীচের বিষয়গুলো বিশ্লেষণ করুন:
+
+1. গল্পটির মূল আবেগ কী?
+2. প্রধান মানসিক দ্বন্দ্ব কী?
+3. চরিত্রটি ভিতরে কী চায়?
+4. বাইরে কী সমস্যা তাকে আটকে দিচ্ছে?
+5. গল্পটির thematic contradiction কী?
+6. পাঠকের মনে গল্প শেষে কী অনুভূতি থাকা উচিত?
+7. এই গল্পের সবচেয়ে শক্তিশালী dramatic irony কী হতে পারে?
+
+তারপর:
+- ৩টি সম্ভাব্য গল্পের দিক দিন
+- প্রতিটির emotional tone লিখুন
+- কোনটি ছোটোগল্প হিসেবে সবচেয়ে কার্যকর হবে ব্যাখ্যা করুন</div>
+        <button class="copy-btn" onclick="copyPrompt('p1', this)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Copy Prompt #1</span>
+        </button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-label">Prompt #2: Story Bible</span>
+        </div>
+        <div class="prompt-content" id="p2">আমার ছোটোগল্পের জন্য একটি compact Story Bible তৈরি করুন।
+
+নিচের বিভাগগুলো পূরণ করুন:
+
+1. Premise
+2. Theme
+3. Main Character
+4. Emotional Wound
+5. External Desire
+6. Internal Need
+7. Fear
+8. Antagonistic Force
+9. Setting
+10. Symbolic Object/Image
+11. Emotional Tone
+12. Ending Transformation
+
+তারপর:
+- গল্পের সম্ভাব্য emotional arc ব্যাখ্যা করুন
+- গল্পটি tragedy, bittersweet, hopeful নাকি psychological ambiguity-তে শেষ হওয়া ভালো হবে তা ব্যাখ্যা করুন</div>
+        <button class="copy-btn" onclick="copyPrompt('p2', this)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Copy Prompt #2</span>
+        </button>
+      </div>
+
+      <!-- Prompt #3 -->
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-label">Prompt #3: Event Chain</span>
+        </div>
+        <div class="prompt-content" id="p3">আমার Story Bible অনুযায়ী একটি chronological event chain তৈরি করুন।
+
+Rules:
+- ঘটনাগুলো strictly cause-and-effect logic অনুসরণ করবে
+- ছোটোগল্প হিসেবে tight pacing বজায় রাখতে হবে
+- unnecessary subplot যোগ করবেন না
+- প্রতিটি ঘটনা emotional escalation তৈরি করবে
+- প্রতিটি event-এর পরে character psychology কীভাবে বদলাচ্ছে সেটাও লিখুন
+
+Format:
+[Event Number]
+- What Happens
+- Why It Happens
+- Emotional Shift
+- New Conflict Created</div>
+        <button class="copy-btn" onclick="copyPrompt('p3', this)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Copy Prompt #3</span>
+        </button>
+      </div>
+
+      <!-- Prompt #4 -->
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-label">Prompt #4: Macro Story Table</span>
+        </div>
+        <div class="prompt-content" id="p4">আমার ছোটোগল্পের chronological event chain-কে classic Three-Act Structure-এ map করুন।
+
+তারপর পুরো গল্পটিকে একটি “Macro Story Table” আকারে সাজান।
+
+IMPORTANT:
+এটি উপন্যাস নয়।
+এটি একটি emotionally dense short story।
+
+তাই:
+- প্রতিটি scene meaningful হতে হবে
+- pacing tight হতে হবে
+- conflict দ্রুত escalate করতে হবে
+- repetition করা যাবে না
+- প্রতিটি scene গল্পকে irreversible direction-এ ঠেলে দেবে
+
+টেবিলে নিচের কলামগুলো থাকতে হবে:
+
+| Act | Scene Number | Main Event / Turning Point | Core Conflict | Emotional Shift | Narrative Purpose |
+
+Column Rules:
+
+1. [Act]
+- Act I: Setup
+- Act II: Confrontation
+- Act III: Resolution
+
+2. [Scene Number]
+- Scene 1, Scene 2...
+
+3. [Main Event / Turning Point]
+- ওই scene-এর সবচেয়ে গুরুত্বপূর্ণ ঘটনা
+
+4. [Core Conflict]
+- scene-এর মূল দ্বন্দ্ব
+- external + internal tension দুটোই থাকলে ভালো
+
+5. [Emotional Shift]
+- scene শুরু ও শেষে চরিত্রের emotional state কীভাবে বদলায়
+
+6. [Narrative Purpose]
+- এই scene গল্পে কী structural কাজ করছে?
+যেমন:
+- setup
+- foreshadowing
+- pressure escalation
+- revelation
+- emotional reversal
+- climax setup
+- thematic payoff
+
+Additional Instructions:
+
+- midpoint থাকলে সেটি clearly identify করুন
+- climax scene আলাদা করে mark করুন
+- final emotional image explain করুন
+- story pacing analysis দিন
+- কোন scene বাদ দিলে গল্প দুর্বল হবে না সেটাও identify করুন</div>
+        <button class="copy-btn" onclick="copyPrompt('p4', this)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Copy Prompt #4</span>
+        </button>
+      </div>
+
+      <!-- Prompt #5 -->
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-label">Prompt #5: Scene Architecture</span>
+        </div>
+        <div class="prompt-content" id="p5">Scene [X] expand করুন।
+
+নিচের বিষয়গুলো লিখুন:
+
+1. Scene Goal
+2. Conflict Source
+3. Character Emotion
+4. Subtext
+5. Sensory Atmosphere
+6. Dialogue Tension
+7. Scene Turn
+8. Ending Hook
+
+তারপর:
+- scene summary লিখুন
+- cinematic prose direction দিন
+- POV consistency বজায় রাখুন
+- emotional compression ব্যবহার করুন</div>
+        <button class="copy-btn" onclick="copyPrompt('p5', this)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Copy Prompt #5</span>
+        </button>
+      </div>
+
+      <!-- Prompt #6 -->
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-label">Prompt #6: Final Narrative Drafting</span>
+        </div>
+        <div class="prompt-content" id="p6">নীচের scene architecture এবং Story Bible অনুসরণ করে পুরো ছোটোগল্পটি লিখুন।
+
+IMPORTANT RULES:
+- literary realism বজায় রাখুন
+- overwriting করবেন না
+- emotional subtlety বজায় রাখুন
+- exposition dump এড়ান
+- dialogue natural রাখুন
+- subtext ব্যবহার করুন
+- sensory details ব্যবহার করুন
+- pacing tight রাখুন
+- ending emotionally resonant হতে হবে
+
+Writing Style:
+- cinematic intimacy
+- psychological realism
+- compressed emotional intensity
+- meaningful silence
+- layered subtext
+
+শেষে:
+- final emotional image শক্তিশালী করুন
+- পাঠকের মনে lingering feeling রেখে শেষ করুন</div>
+        <button class="copy-btn" onclick="copyPrompt('p6', this)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Copy Prompt #6</span>
+        </button>
+      </div>
+
+    </div>
+
+    <footer class="footer">
+      <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    function copyPrompt(id, btn) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span>Copied to Clipboard!</span>`;
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalContent;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
