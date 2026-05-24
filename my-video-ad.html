@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Product's AD Video - Tone Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #0f172a; 
+      --bg-gradient-end: #020617;
+      --card-bg: rgba(30, 41, 59, 0.5);
+      --card-border: rgba(148, 163, 184, 0.2);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-heading: #ffffff;
+      --accent-primary: #38bdf8; 
+      --accent-hover: #7dd3fc;
+      --accent-success: #22c55e;
+      --code-bg: rgba(0, 0, 0, 0.4);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+      --input-bg: rgba(15, 23, 42, 0.8);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      flex-grow: 1;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--accent-primary);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Input Section */
+    .input-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .input-group label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 15px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      resize: vertical;
+      min-height: 80px;
+      transition: border-color 0.3s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .prompts-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .prompt-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px var(--shadow-color);
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    .prompt-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-primary);
+    }
+    .prompt-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .prompt-label::after {
+      content: "";
+      height: 1px;
+      flex-grow: 1;
+      background: var(--card-border);
+    }
+    .prompt-text {
+      background-color: var(--code-bg);
+      padding: 24px;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .copy-button {
+      align-self: flex-end;
+      padding: 12px 24px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #020617;
+      background-color: var(--accent-primary);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .copy-button:hover {
+      background-color: var(--accent-hover);
+      box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
+    }
+    .copy-button.copied {
+      background-color: var(--accent-success);
+      color: #fff;
+    }
+    .icon { width: 16px; height: 16px; }
+
+    footer {
+        margin-top: 60px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        padding-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>My Product's AD Video</h1>
+      <p class="subtitle">Cinematic Ad Strategy & Production</p>
+    </header>
+
+    <section class="input-section">
+      <div class="input-group">
+        <label>Product Details</label>
+        <textarea id="input-product" placeholder="Paste details about your product here..."></textarea>
+      </div>
+      <div class="input-group">
+        <label>Selected Ad Idea</label>
+        <textarea id="input-idea" placeholder="Paste the ad idea you selected here..."></textarea>
+      </div>
+      <div class="input-group">
+        <label>Video Plan</label>
+        <textarea id="input-plan" placeholder="Paste the full video plan/scene breakdown here..."></textarea>
+      </div>
+    </section>
+
+    <main class="prompts-stack">
+      
+      <!-- Prompt #1 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #1: Idea Generation</div>
+        <pre class="prompt-text" id="p1-content">ROLE (MANDATORY):
+
+Act as a psychologically intelligent cinematic ad strategist and emotional storytelling director who specializes in:
+
+* short-form video advertising,
+* introspective psychological products,
+* emotional behavior,
+* internal conflict,
+* cinematic storytelling,
+* and modern emotionally realistic advertising.
+
+Your job is NOT to create generic marketing ads.
+
+Your job is to create emotionally recognizable, psychologically sharp, visually cinematic ad concepts that feel human, emotionally tense, introspective, and mentally immersive.
+
+Focus heavily on:
+
+* emotional realism,
+* internal monologue,
+* psychological tension,
+* subtle emotional discomfort,
+* emotional clarity,
+* believable human behavior,
+* emotional relatability,
+* and psychological recognition.
+
+Prioritize emotional relatability and psychological recognition over product explanation.
+
+Prefer cinematic realism, subtle symbolism, silence, emotional pauses, internal monologue, atmospheric tension, and emotionally immersive storytelling over fast-paced commercial energy.
+
+Avoid:
+
+* corporate ad tone,
+* generic motivational content,
+* flashy AI-tech aesthetics,
+* exaggerated marketing language,
+* shallow productivity-style advertising,
+* overexplaining the product,
+* and artificial marketing-style emotional manipulation.
+
+TASK
+
+Please review the product details below and give me multiple strong ideas for short-form video ads to promote this product online.
+
+IMPORTANT CONTEXT (MANDATORY):
+
+I want these ads to feel:
+
+* psychologically sharp
+* emotionally realistic
+* cinematic
+* introspective
+* emotionally tension-driven
+* minimal and modern
+* non-corporate
+* non-generic
+* emotionally immersive
+* psychologically recognizable
+
+The ads should focus more on:
+
+* emotional recognition
+* internal conflict
+* mental states
+* psychological tension
+* emotional clarity
+* human behavior
+* emotional realism
+* subtle emotional discomfort
+* believable thought patterns
+
+NOT on:
+
+* flashy marketing
+* generic productivity content
+* overhyped AI visuals
+* corporate SaaS-style advertising
+* aggressive sales language
+* traditional ad-style persuasion
+* fake inspirational energy
+
+TOOLS I USE (MANDATORY):
+
+1. ChatGPT → idea generation, scripts, shot planning, prompt writing
+2. Flow → image generation and Veo 3.1 video clip generation using Ingredients
+3. Microsoft ClipChamp → voice-over generation (if needed), subtitles/captions
+4. Filmora → final manual editing, pacing, sound design, transitions, effects
+
+WHEN GIVING IDEAS:
+
+Please include:
+
+* ad concept
+* emotional angle
+* psychological insight behind the ad
+* hook idea
+* scene flow
+* visual style
+* camera language suggestions
+* lighting and atmosphere direction
+* pacing style
+* voice-over direction
+* subtitle/caption style suggestions
+* sound design suggestions
+* Veo-friendly cinematic scene ideas
+* symbolic or emotionally immersive visual ideas (if relevant)
+* recommended ad duration
+* CTA direction
+
+VISUAL & CINEMATIC DIRECTION:
+
+Prefer:
+
+* cinematic realism
+* dim lighting
+* quiet environments
+* emotional isolation
+* subtle facial expressions
+* slow camera movement
+* handheld realism
+* shallow depth of field
+* atmospheric tension
+* realistic modern environments
+* silence and breathing space
+* psychologically immersive framing
+
+Avoid:
+
+* overly polished commercial visuals
+* loud editing
+* hyperactive transitions
+* meme-style pacing
+* unrealistic cinematic spectacle
+* excessive motion graphics
+* generic AI-generated aesthetics
+
+Assume the target format is vertical short-form video for Facebook Reels, Instagram Reels, and YouTube Shorts unless specified otherwise.
+
+PRODUCT DETAILS:
+[Insert Product Details Here]</pre>
+        <button class="copy-button" onclick="copyPrompt('p1-content')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #1</span>
+        </button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #2: Video Planning</div>
+        <pre class="prompt-text" id="p2-content">ROLE (MANDATORY):
+
+Act as a cinematic short-form video director, psychological ad strategist, emotional storytelling planner, and AI-assisted pre-production supervisor specializing in:
+
+* psychologically driven advertising,
+* emotionally immersive short-form videos,
+* cinematic storytelling,
+* emotional realism,
+* internal conflict,
+* introspective human behavior,
+* and AI-assisted video production workflows.
+
+Your job is NOT to generate generic marketing scripts or random visual ideas.
+
+Your job is to transform the selected ad concept into a highly detailed, emotionally cohesive, production-ready cinematic video plan that can realistically be executed using:
+
+* ChatGPT,
+* Flow,
+* Veo 3.1,
+* Microsoft ClipChamp,
+* and Filmora.
+
+Focus heavily on:
+
+* emotional progression,
+* psychological realism,
+* cinematic continuity,
+* believable human behavior,
+* emotional tension,
+* atmosphere,
+* emotional clarity,
+* visual consistency,
+* audience retention,
+* and emotionally immersive storytelling.
+
+Prioritize:
+
+* emotional recognition,
+* psychological realism,
+* emotional memorability,
+* audience retention,
+* cinematic atmosphere,
+* emotional sequencing,
+* and strong early viewer engagement
+
+over:
+
+* flashy visuals,
+* overcomplicated editing,
+* generic ad structures,
+* shallow marketing language,
+* or unrealistic cinematic spectacle.
+
+Avoid:
+
+* corporate advertising tone,
+* generic motivational content,
+* shallow productivity-style messaging,
+* overexplaining the product,
+* hyperactive editing,
+* excessive visual clutter,
+* loud commercial energy,
+* meme-style pacing,
+* and generic AI-generated aesthetics.
+
+TASK
+
+Please create a highly detailed pre-production and execution plan for the selected short-form video ad idea provided below.
+
+The final output should feel like a realistic cinematic production blueprint for creating the ad from start to finish.
+
+IMPORTANT CONTEXT (MANDATORY):
+
+I will use:
+
+1. ChatGPT → scripting, scene planning, Veo prompts, captions, creative direction
+2. Flow → image generation and Veo 3.1 video clip generation using Ingredients
+3. Microsoft ClipChamp → voice-over generation, subtitles/captions, temporary assembly
+4. Filmora → final manual editing, pacing, sound design, transitions, effects, final polish
+
+Assume the final format is:
+
+* vertical short-form video
+* optimized for Facebook Reels, Instagram Reels, and YouTube Shorts
+
+VIDEO PLANNING REQUIREMENTS (MANDATORY):
+
+Please provide:
+
+1. Core emotional objective of the ad
+2. Psychological insight behind the ad
+3. Intended emotional journey of the viewer
+4. Recommended total ad duration
+5. Recommended pacing strategy
+6. Visual storytelling approach
+7. Recommended cinematic tone
+8. Character design recommendations
+9. Lighting and atmosphere direction
+10. Camera language recommendations
+11. Sound design direction
+12. Voice-over strategy
+13. Dialogue strategy
+14. Subtitle/caption style recommendations
+15. Editing rhythm suggestions
+16. CTA strategy
+17. Viewer retention strategy
+18. Recommended first 3–5 second hook structure
+
+IMPORTANT RETENTION REQUIREMENT:
+
+The first 3–5 seconds must contain:
+
+* a strong psychological hook,
+* emotional interruption,
+* curiosity trigger,
+* emotionally recognizable moment,
+* or tension-inducing statement
+
+optimized specifically for short-form audience retention.
+
+Then create a COMPLETE SCENE-BY-SCENE BREAKDOWN.
+
+FOR EACH SCENE INCLUDE:
+
+* scene number
+* estimated duration
+* emotional purpose
+* psychological purpose
+* visual description
+* character behavior and emotional state
+* environment description
+* camera direction
+* lighting direction
+* sound design ideas
+* dialogue
+* voice-over / narration
+* subtitle text (if relevant)
+* Veo-friendly cinematic generation direction
+* editing notes
+* transition into next scene
+* audience retention purpose
+
+IMPORTANT:
+
+The scenes must:
+
+* feel emotionally connected,
+* maintain cinematic consistency,
+* maintain character consistency,
+* maintain emotional continuity,
+* and create a believable emotional progression.
+
+The ad structure should:
+
+* maintain emotional immersion,
+* maintain audience retention,
+* balance cinematic realism with short-form pacing,
+* and feel optimized for real social media viewing behavior.
+
+Prefer:
+
+* cinematic realism,
+* silence,
+* emotional pauses,
+* subtle symbolism,
+* quiet emotional tension,
+* realistic modern environments,
+* immersive framing,
+* natural human behavior,
+* and psychologically immersive storytelling.
+
+Avoid:
+
+* loud commercial energy,
+* unrealistic visual spectacle,
+* excessive motion graphics,
+* generic AI-video aesthetics,
+* chaotic editing,
+* and artificial emotional manipulation.
+
+At the end of the answer, create a COMPLETE EXECUTION TABLE containing all major production details needed for understanding and executing the video plan efficiently.
+
+MANDATORY TABLE REQUIREMENTS:
+
+The final table must include:
+
+* Scene Number
+* Scene Duration
+* Emotional Purpose
+* Psychological Purpose
+* Key Visual
+* Character Emotion
+* Camera Style
+* Lighting Style
+* Audio / Sound Design
+* Dialogue
+* Voice-over / Narration
+* Editing Notes
+* Transition Type
+* Audience Retention Purpose
+* Veo Generation Focus
+
+SELECTED AD IDEA / CONCEPT:
+[Insert Selected Ad Idea Here]
+
+PRODUCT DETAILS:
+[Insert Product Details Here]</pre>
+        <button class="copy-button" onclick="copyPrompt('p2-content')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #2</span>
+        </button>
+      </div>
+
+      <!-- Prompt #3 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #3: Shot Generation</div>
+        <pre class="prompt-text" id="p3-content">ROLE (MANDATORY):
+
+Act as a cinematic AI-video production director, psychological ad strategist, Veo-focused visual storyteller, and AI-assisted shot planning supervisor specializing in:
+
+* short-form cinematic advertising,
+* emotionally immersive storytelling,
+* psychological realism,
+* internal conflict,
+* introspective emotional advertising,
+* AI-generated cinematography,
+* Veo 3.1 shot planning,
+* and modular AI-video production workflows.
+
+Your job is NOT to create generic video ideas or random AI prompts.
+
+Your job is to transform the provided ad concept and video plan into a complete cinematic clip-generation blueprint optimized for:
+
+* Nano Banana image generation,
+* Flow image generation,
+* Veo 3.1 video generation,
+* Ingredients-based workflows,
+* and short-form vertical video editing workflows.
+
+The output must feel like:
+
+* a realistic cinematic shot plan,
+* an emotionally immersive AI-film storyboard,
+* and a production-ready clip generation system.
+
+Focus heavily on:
+
+* emotional continuity,
+* cinematic realism,
+* psychological immersion,
+* emotional pacing,
+* audience retention,
+* modular shot design,
+* visual consistency,
+* character consistency,
+* atmospheric tension,
+* realistic human behavior,
+* and short-form cinematic storytelling.
+
+Prioritize:
+
+* emotional recognition,
+* psychological realism,
+* cinematic immersion,
+* emotional sequencing,
+* audience retention,
+* believable visual storytelling,
+* production practicality,
+* and continuity efficiency
+
+over:
+
+* flashy AI visuals,
+* unrealistic cinematic spectacle,
+* generic social media aesthetics,
+* shallow marketing visuals,
+* hyperactive editing,
+* or random artistic shots.
+
+Avoid:
+
+* corporate advertising energy,
+* generic AI-generated aesthetics,
+* loud commercial pacing,
+* meme-style editing,
+* unrealistic environments,
+* inconsistent character design,
+* visual clutter,
+* exaggerated emotional acting,
+* and unnecessary visual complexity.
+
+TASK
+
+Please create a complete cinematic clip-generation plan for the ad video provided below.
+
+The output should break the ad into modular cinematic clips optimized for:
+
+* Veo 3.1 generation,
+* Ingredients-based workflows,
+* short-form editing,
+* emotional pacing,
+* audience retention,
+* and realistic social-media viewing behavior.
+
+IMPORTANT CONTEXT (MANDATORY):
+
+TOOLS I USE:
+
+1. ChatGPT → scripting, scene planning, prompt writing
+2. Flow → image generation and Veo 3.1 video generation using Ingredients
+3. Microsoft ClipChamp → voice-over generation, subtitles/captions
+4. Filmora → final editing, pacing, transitions, sound design, effects
+
+IMPORTANT FLOW / INGREDIENTS LIMITATION (MANDATORY):
+
+Assume that Veo generation inside Flow using Ingredients allows a maximum of 3 uploaded reference images per clip.
+
+Therefore:
+
+* Optimize all clip planning for minimal reference-image dependency.
+* Prefer using 1–3 strong anchor images per clip.
+* Reuse consistent character and environment references whenever possible.
+* Avoid requiring excessive visual variations between clips.
+* Design clips so they can realistically maintain continuity using limited reference inputs.
+* Prioritize consistency of:
+
+  * character appearance,
+  * clothing,
+  * lighting family,
+  * environment,
+  * and cinematic tone
+    using as few reference images as possible.
+
+When relevant, suggest:
+
+* which reference image(s) should be reused across multiple clips,
+* which clips can share the same visual anchor,
+* and when a new reference image is actually necessary.
+
+REFERENCE IMAGE STRATEGY (MANDATORY):
+
+Organize clips into reusable visual reference groups whenever possible.
+
+Each reference group should ideally maintain:
+
+* the same character,
+* same clothing,
+* same environment,
+* same lighting family,
+* and same emotional atmosphere.
+
+Minimize unnecessary changes between clips unless emotionally or narratively important.
+
+Prefer continuity and emotional immersion over excessive visual variety.
+
+IMPORTANT CREATIVE DIRECTION:
+
+The clips should feel:
+
+* cinematic,
+* emotionally immersive,
+* psychologically realistic,
+* minimal,
+* introspective,
+* emotionally tense,
+* modern,
+* and visually cohesive.
+
+Prefer:
+
+* cinematic realism,
+* emotional silence,
+* subtle symbolism,
+* dim lighting,
+* natural environments,
+* quiet emotional tension,
+* slow camera movement,
+* realistic facial expressions,
+* immersive framing,
+* and emotionally immersive storytelling.
+
+Avoid:
+
+* loud editing,
+* excessive motion graphics,
+* unrealistic AI spectacle,
+* overproduced commercial aesthetics,
+* fake emotional acting,
+* and hyperactive pacing.
+
+VIDEO GENERATION STRATEGY (MANDATORY):
+
+The ad should be broken into:
+
+* short modular cinematic clips,
+* atmospheric inserts,
+* emotional reaction shots,
+* symbolic shots,
+* environmental shots,
+* and transition shots.
+
+Do NOT generate:
+
+* long complicated scenes,
+* overly complex multi-action sequences,
+* or visually overloaded clips.
+
+Prefer:
+
+* short focused clips,
+* emotionally clear visual moments,
+* and easily editable cinematic fragments.
+
+CLIP REQUIREMENTS (MANDATORY):
+
+For EACH clip include:
+
+1. Clip Number
+2. Clip Purpose
+3. Emotional Purpose
+4. Psychological Purpose
+5. Estimated Clip Duration
+6. Reference Group ID (if applicable)
+7. Key Visual Description
+8. Character Emotion
+9. Environment Description
+10. Camera Direction
+11. Lighting Direction
+12. Audio / Sound Design Suggestions
+13. Dialogue (if any)
+14. Voice-over / Narration (if any)
+15. On-screen Text / Caption (if any)
+16. Transition Suggestion
+17. Editing Notes
+18. Audience Retention Purpose
+19. Whether New Reference Image Is Needed
+20. Recommended Reference Image Reuse Strategy
+21. Nano Banana / Image Generation Prompt
+22. Veo 3.1 Video Generation Prompt
+23. Cinematic Direction Usage
+24. Additional Manual Direction Needed?
+25. Veo Cinematic Direction Notes
+
+IMPORTANT IMAGE PROMPT REQUIREMENTS:
+
+The image prompts should:
+
+* establish character consistency,
+* establish environment consistency,
+* establish cinematic tone,
+* establish lighting consistency,
+* and work as strong visual anchors for Veo generation.
+
+Only generate new image-reference prompts when necessary for:
+
+* maintaining visual continuity,
+* introducing new environments,
+* introducing important emotional shifts,
+* or establishing major cinematic anchors.
+
+Avoid unnecessary reference-image generation for:
+
+* insert shots,
+* transition shots,
+* environmental fillers,
+* visually related clips,
+* or simple cinematic variations.
+
+IMPORTANT VEO PROMPT REQUIREMENTS:
+
+The Veo prompts should:
+
+* be cinematic and visually detailed,
+* include emotional atmosphere,
+* include camera movement,
+* include lighting mood,
+* include environment realism,
+* include character behavior,
+* and be optimized for short cinematic clips.
+
+Whenever possible, automatically integrate cinematic direction notes directly into the Veo 3.1 video prompt itself instead of leaving them only as separate notes.
+
+Only keep separate cinematic direction notes for:
+
+* editing guidance,
+* transition handling,
+* regeneration troubleshooting,
+* pacing adjustments,
+* or manual post-production decisions.
+
+Clearly specify:
+
+* whether the cinematic direction has already been integrated into the Veo prompt,
+* partially integrated,
+* or requires additional manual application.
+
+IMPORTANT RETENTION REQUIREMENT:
+
+The first 3–5 seconds of the ad must contain:
+
+* a psychologically strong hook,
+* emotional interruption,
+* emotional curiosity,
+* or an emotionally recognizable visual moment
+
+optimized for short-form audience retention.
+
+IMPORTANT CONSISTENCY REQUIREMENT:
+
+Maintain:
+
+* consistent character appearance,
+* consistent cinematic style,
+* consistent lighting family,
+* consistent emotional tone,
+* and believable emotional progression across all clips.
+
+FINAL OUTPUT REQUIREMENT:
+
+At the end of the answer, create a COMPLETE CLIP EXECUTION TABLE containing all clip-generation details for production and editing.
+
+MANDATORY TABLE COLUMNS:
+
+* Clip Number
+* Clip Duration
+* Reference Group ID
+* Clip Purpose
+* Emotional Purpose
+* Psychological Purpose
+* Key Visual
+* Character Emotion
+* Camera Direction
+* Lighting Style
+* Audio / Sound Design
+* Dialogue
+* Voice-over / Narration
+* On-screen Text
+* Transition Type
+* Editing Notes
+* Audience Retention Purpose
+* New Reference Image Needed?
+* Reference Image Reuse Strategy
+* Nano Banana / Image Prompt
+* Veo 3.1 Video Prompt
+* Cinematic Direction Usage
+* Additional Manual Direction Needed?
+* Veo Cinematic Direction Notes
+
+SELECTED AD IDEA / CONCEPT:
+[Insert Selected Ad Idea Here]
+
+VIDEO PLAN / SCENE BREAKDOWN:
+[Insert Video Plan Here]
+
+PRODUCT DETAILS:
+[Insert Product Details Here]</pre>
+        <button class="copy-button" onclick="copyPrompt('p3-content')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #3</span>
+        </button>
+      </div>
+
+    </main>
+
+    <footer>
+        <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Social Strategy Genie. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    function copyPrompt(elementId) {
+      const button = event.currentTarget;
+      const btnText = button.querySelector('.button-text');
+      const originalBtnText = btnText.textContent;
+
+      // Get values from input textareas
+      const productDetails = document.getElementById('input-product').value.trim() || "[Insert Product Details Here]";
+      const adIdea = document.getElementById('input-idea').value.trim() || "[Insert Selected Ad Idea Here]";
+      const videoPlan = document.getElementById('input-plan').value.trim() || "[Insert Video Plan Here]";
+
+      // Get the base prompt text
+      let textToCopy = document.getElementById(elementId).textContent;
+
+      // Perform dynamic replacements
+      textToCopy = textToCopy.replace(/\[Insert Product Details Here\]/g, productDetails);
+      textToCopy = textToCopy.replace(/\[Insert Selected Ad Idea Here\]/g, adIdea);
+      textToCopy = textToCopy.replace(/\[Insert Video Plan Here\]/g, videoPlan);
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        btnText.textContent = 'Copied!';
+        button.classList.add('copied');
+        
+        setTimeout(() => {
+          btnText.textContent = originalBtnText;
+          button.classList.remove('copied');
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
+  </script>
+
+</body>
+</html>
