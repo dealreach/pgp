@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Audience: Elegant - Tone Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #2e1065; 
+      --bg-gradient-end: #020617;
+      --card-bg: rgba(88, 28, 135, 0.1);
+      --card-border: rgba(192, 132, 252, 0.2);
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-heading: #ffffff;
+      --accent-primary: #c084fc; 
+      --accent-hover: #e879f9;
+      --accent-success: #22c55e;
+      --code-bg: rgba(0, 0, 0, 0.4);
+      --shadow-color: rgba(0, 0, 0, 0.6);
+      --input-bg: rgba(15, 23, 42, 0.7);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      flex-grow: 1;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--accent-primary);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Input Section Styles */
+    .input-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 30px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(10px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .input-group.full-width {
+      grid-column: span 2;
+    }
+    .input-group label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    textarea, select {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      background: rgba(15, 23, 42, 0.9);
+    }
+    select option {
+      background: #1e1b4b;
+      color: #fff;
+    }
+
+    /* Prompts Stack */
+    .prompts-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .prompt-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: 0 10px 40px var(--shadow-color);
+      backdrop-filter: blur(12px);
+      padding: 35px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    .prompt-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-primary);
+    }
+    .prompt-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .prompt-label::after {
+      content: "";
+      height: 1px;
+      flex-grow: 1;
+      background: var(--card-border);
+    }
+    .prompt-text {
+      background-color: var(--code-bg);
+      padding: 24px;
+      border-radius: 16px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.85rem;
+      color: #f1f5f9;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    /* Custom Scrollbar for Pre */
+    .prompt-text::-webkit-scrollbar {
+      width: 8px;
+    }
+    .prompt-text::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .prompt-text::-webkit-scrollbar-thumb {
+      background: var(--card-border);
+      border-radius: 10px;
+    }
+
+    /* Button Styles */
+    .copy-button {
+      align-self: flex-end;
+      padding: 12px 28px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: linear-gradient(to right, #7e22ce, #9333ea);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 12px rgba(126, 34, 206, 0.3);
+    }
+    .copy-button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 20px rgba(147, 51, 234, 0.4);
+    }
+    .copy-button.copied {
+      background: var(--accent-success);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    .icon { width: 18px; height: 18px; }
+
+    footer {
+        margin-top: 60px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        padding-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .input-section {
+        grid-template-columns: 1fr;
+      }
+      .input-group.full-width {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Audience: Elegant</h1>
+      <p class="subtitle">Sophistication & Taste Framework</p>
+    </header>
+
+    <section class="input-section">
+      <div class="input-group full-width">
+        <label>Topic</label>
+        <textarea id="val-topic" placeholder="Describe the main topic..."></textarea>
+      </div>
+
+      <div class="input-group">
+        <label>Content Type</label>
+        <select id="val-type">
+          <option value="Text">Text</option>
+          <option value="Image">Image</option>
+          <option value="Video">Video</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Content Objective</label>
+        <textarea id="val-objective" placeholder="What do you want to create?"></textarea>
+      </div>
+
+      <div class="input-group full-width">
+        <label>Topic / Core Idea</label>
+        <textarea id="val-core" placeholder="Product, message, or creative concept..."></textarea>
+      </div>
+
+      <div class="input-group full-width">
+        <label>Target Audience Psychology & Taste Analysis</label>
+        <textarea id="val-analysis" placeholder="Paste the audience analysis results here..."></textarea>
+      </div>
+    </section>
+
+    <main class="prompts-stack">
+      
+      <!-- Prompt #1 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Report Genie</div>
+        <pre class="prompt-text" id="prompt-1-text">ROLE (MANDATORY):
+
+Act as a luxury audience psychology strategist, elite cultural behavior analyst, premium communication expert, emotional storytelling strategist, and high-end creative positioning specialist.
+
+Your task is to deeply analyze the tastes, emotional triggers, aesthetic preferences, intellectual expectations, psychological sensitivities, communication styles, attention-retention patterns, and aspirational desires of a highly affluent, sophisticated, aristocratic audience in relation to the following topic:
+
+TOPIC:
+[Topic]
+
+MANDATORY OBJECTIVE:
+
+Help me understand how to communicate this topic in a way that naturally attracts, emotionally engages, intellectually satisfies, and retains the attention of a refined, highly affluent, aesthetically sensitive audience with elevated standards of taste and sophistication.
+
+Analyze the audience’s likely preferences regarding:
+
+- emotional angles
+- storytelling approaches
+- communication tone
+- psychological hooks
+- visual atmosphere
+- conversation style
+- pacing of ideas
+- philosophical depth
+- intellectual framing
+- emotional sophistication
+- aspirational desires
+- subtle status signaling
+- luxury perception
+- elegance in expression
+- sentence rhythm and delivery
+- word selection
+- aesthetic sensitivity
+- symbolic themes
+- relatable emotional conflicts
+- refined human experiences
+- understated persuasion
+- attention-retention psychology
+- curiosity triggers
+- trust-building patterns
+- sophistication markers
+- premium cultural associations
+
+MANDATORY ANALYSIS REQUIREMENTS:
+
+Identify:
+
+- what this audience finds emotionally attractive
+- what instantly feels “cheap,” generic, loud, or intellectually shallow to them
+- what kind of language feels refined and trustworthy
+- what type of storytelling feels elegant and immersive
+- what themes emotionally resonate with them
+- what emotional tensions subtly hold their attention
+- what communication styles feel premium versus mass-market
+- what aesthetic directions align with their taste
+- what psychological patterns increase retention and fascination
+- what forms of persuasion feel natural rather than sales-oriented
+- what kind of realism, restraint, and sophistication they admire
+
+MANDATORY OUTPUT STRUCTURE:
+
+Provide detailed analysis for:
+
+1. Audience Psychology
+2. Emotional Triggers
+3. Preferred Angles and Perspectives
+4. Storytelling Styles That Attract Them
+5. Word Choices and Sentence Styles That Feel Refined
+6. Topics and Themes That Naturally Hold Their Attention
+7. Emotional Conflicts and Human Experiences They Relate To
+8. Communication Styles to Avoid
+9. Visual and Aesthetic Preferences
+10. Attention-Retention Mechanisms
+11. Luxury Perception and Sophistication Signals
+12. Recommended Tone, Mood, and Atmosphere
+13. Examples of Refined vs Generic Communication
+14. Strategic Creative Recommendations
+
+MANDATORY STYLE RULES:
+
+The analysis must:
+- feel psychologically deep and strategically insightful
+- avoid generic marketing advice
+- avoid shallow luxury stereotypes
+- avoid mass-market communication logic
+- prioritize emotional intelligence and sophistication
+- focus on understated elegance and refined persuasion
+- remain highly practical and creatively actionable
+- explain the “why” behind each recommendation
+- maintain premium intellectual depth and clarity</pre>
+        <button class="copy-button" onclick="copyPrompt('prompt-1-text')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="btn-label">Copy Report Genie</span>
+        </button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Content Details Genie</div>
+        <pre class="prompt-text" id="prompt-2-text">ROLE (MANDATORY):
+
+Act as an elite AI creative strategist, luxury communication architect, audience psychology integrator, and premium aesthetic alignment specialist.
+
+Your task is to use the provided audience psychology and taste analysis as a strategic creative context/reference framework for generating highly refined, emotionally intelligent, aesthetically sophisticated, and audience-compatible content.
+
+CONTENT TYPE:
+[CONTENT TYPE]
+
+CONTENT OBJECTIVE:
+[Insert what you want to create]
+
+TOPIC / CORE IDEA:
+[Insert topic, product, message, story idea, or creative concept]
+
+TARGET AUDIENCE PSYCHOLOGY & TASTE ANALYSIS:
+[Paste the relevant audience-analysis output here]
+
+MANDATORY OBJECTIVE:
+
+Generate content that feels deeply aligned with the psychological preferences, emotional sensitivities, intellectual expectations, aesthetic standards, communication tastes, and sophistication level of the target audience.
+
+The generated output must feel:
+
+- emotionally intelligent
+- aesthetically refined
+- psychologically immersive
+- naturally premium
+- elegant and restrained
+- emotionally believable
+- intellectually satisfying
+- visually and emotionally intentional
+- highly engaging without appearing attention-seeking
+- aspirational yet authentic
+- sophisticated without feeling pretentious
+
+MANDATORY INTEGRATION RULES:
+
+The generated content must intelligently integrate:
+
+- preferred emotional triggers
+- refined storytelling styles
+- sophisticated communication patterns
+- premium aesthetic sensibilities
+- subtle persuasion mechanisms
+- audience-compatible pacing
+- elegant emotional tension
+- refined language patterns
+- understated luxury perception
+- believable emotional realism
+- audience-specific attention-retention psychology
+- aspirational psychological framing
+- symbolic and atmospheric resonance
+
+MANDATORY QUALITY RULES:
+
+The output must avoid:
+
+- generic AI-generated aesthetics
+- loud or exaggerated presentation
+- cheap commercial energy
+- oversimplified emotional manipulation
+- mass-market communication styles
+- trend-chasing aesthetics
+- emotionally shallow storytelling
+- forced luxury stereotypes
+- visual or narrative clutter
+- artificial sophistication
+- unrealistic perfection
+- emotionally empty beauty
+
+MANDATORY CREATIVE PRIORITIES:
+
+Prioritize:
+
+- emotional depth
+- realism
+- elegance
+- restraint
+- sophistication
+- intentionality
+- atmosphere
+- psychological nuance
+- refined communication
+- visual and emotional harmony
+- audience trust
+- memorable emotional experience
+- natural attraction and retention
+
+MANDATORY OUTPUT STYLE:
+
+The generated output must:
+
+- feel professionally art-directed and strategically intentional
+- feel highly compatible with affluent and aesthetically sensitive audiences
+- maintain natural sophistication and emotional realism
+- avoid generic AI prompt phrasing
+- feel premium without trying too hard
+- remain immersive, believable, and emotionally resonant
+- preserve clarity while maintaining elegance
+- communicate with refined confidence rather than aggressive persuasion
+
+Use the audience psychology and taste analysis as a deep strategic reference framework throughout the entire creative generation process.</pre>
+        <button class="copy-button" onclick="copyPrompt('prompt-2-text')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="btn-label">Copy Details Genie</span>
+        </button>
+      </div>
+
+    </main>
+
+    <footer>
+        <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Social Strategy Genie. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    function copyPrompt(id) {
+      const btn = event.currentTarget;
+      const label = btn.querySelector('.btn-label');
+      const originalText = label.textContent;
+
+      // Get values from inputs
+      const topic = document.getElementById('val-topic').value || "[Topic]";
+      const cType = document.getElementById('val-type').value || "[CONTENT TYPE]";
+      const objective = document.getElementById('val-objective').value || "[Insert what you want to create]";
+      const coreIdea = document.getElementById('val-core').value || "[Insert topic, product, message, story idea, or creative concept]";
+      const analysis = document.getElementById('val-analysis').value || "[Paste the relevant audience-analysis output here]";
+
+      // Get prompt text
+      let text = document.getElementById(id).textContent;
+
+      // Replace Placeholders
+      text = text.replace(/\[Topic\]/g, topic);
+      text = text.replace(/\[CONTENT TYPE\]/g, cType);
+      text = text.replace(/\[Insert what you want to create\]/g, objective);
+      text = text.replace(/\[Insert topic, product, message, story idea, or creative concept\]/g, coreIdea);
+      text = text.replace(/\[Paste the relevant audience-analysis output here\]/g, analysis);
+
+      // Copy
+      navigator.clipboard.writeText(text).then(() => {
+        label.textContent = "Copied!";
+        btn.classList.add('copied');
+        setTimeout(() => {
+          label.textContent = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>
