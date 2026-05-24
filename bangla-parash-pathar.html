@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bangla Parash Pathar - Tone Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #312e81; 
+      --bg-gradient-end: #020617;
+      --card-bg: rgba(67, 56, 202, 0.1);
+      --card-border: rgba(129, 140, 248, 0.2);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-heading: #ffffff;
+      --accent-primary: #818cf8; 
+      --accent-hover: #a5b4fc;
+      --accent-success: #10b981;
+      --code-bg: rgba(0, 0, 0, 0.4);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+      --input-bg: rgba(15, 23, 42, 0.8);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 850px;
+      width: 100%;
+      margin: 0 auto;
+      flex-grow: 1;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--accent-primary);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Input Section */
+    .input-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(10px);
+    }
+    .input-group label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      display: block;
+      margin-bottom: 12px;
+    }
+    input[type="text"] {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 15px rgba(129, 140, 248, 0.2);
+    }
+
+    .prompts-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .prompt-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px var(--shadow-color);
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    .prompt-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-primary);
+    }
+    .prompt-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .prompt-label::after {
+      content: "";
+      height: 1px;
+      flex-grow: 1;
+      background: var(--card-border);
+    }
+    .prompt-text {
+      background-color: var(--code-bg);
+      padding: 24px;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    .copy-button {
+      align-self: flex-end;
+      padding: 12px 24px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #020617;
+      background-color: var(--accent-primary);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .copy-button:hover {
+      background-color: var(--accent-hover);
+      box-shadow: 0 5px 15px rgba(129, 140, 248, 0.3);
+    }
+    .copy-button.copied {
+      background-color: var(--accent-success);
+      color: #fff;
+    }
+    .icon { width: 16px; height: 16px; }
+
+    footer {
+        margin-top: 60px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        padding-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Bangla Parash Pathar</h1>
+      <p class="subtitle">Instructional Dialect Framework</p>
+    </header>
+
+    <section class="input-section">
+      <div class="input-group">
+        <label>App or Way</label>
+        <input type="text" id="app-input" placeholder="e.g. Facebook Page, WhatsApp Business, etc.">
+      </div>
+    </section>
+
+    <main class="prompts-stack">
+      
+      <!-- Prompt #1 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #1</div>
+        <pre class="prompt-text" id="p1-content">How To Create and Set Up A [App or Way]?
+
+Please write the answer in the most spontaneous and natural sounding modern, everyday conversational Bengali as spoken in Kolkata, West Bengal, India that can be understood by an 21 year old but contains the international standards of language.
+
+Strict Rules:
+
+Must subtly reflect Kolkata conversational cadence through sentence rhythm and phrasing by using slightly formal, polite, and smoothly flowing sentence structures, with balanced pacing and no abrupt or overly casual wording — without slang, regional grammar, or loss of conservative authority.
+
+• Always use the formal “আপনি”, not the informal “তুমি.” The address is formal, but the tone should remain warm, conversational, and approachable.
+• The voice should be bold, direct, also should feel like a close friend and a trusted authority, speaking one-on-one with the reader in a natural, face-to-style.</pre>
+        <button class="copy-button" onclick="copyPrompt('p1-content')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #1</span>
+        </button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #2</div>
+        <pre class="prompt-text" id="p2-content">Please provide a step-by-step execution process, starting from setup and continuing through full completion. 
+Also include AI-assisted prompts for any steps that can be completed with the help of AI.
+Each instruction must be written as if you are guiding the user live, in real time, while they are using their phone or computer.
+
+Please write the answer in the most spontaneous and natural sounding modern, everyday conversational Bengali as spoken in Kolkata, West Bengal, India that can be understood by an 21 year old but contains the international standards of language.
+
+Strict Rules:
+
+Must subtly reflect Kolkata conversational cadence through sentence rhythm and phrasing by using slightly formal, polite, and smoothly flowing sentence structures, with balanced pacing and no abrupt or overly casual wording — without slang, regional grammar, or loss of conservative authority.
+
+• Always use the formal “আপনি”, not the informal “তুমি.” The address is formal, but the tone should remain warm, conversational, and approachable.
+• The voice should be bold, direct, also should feel like a close friend and a trusted authority, speaking one-on-one with the reader in a natural, face-to-face style.</pre>
+        <button class="copy-button" onclick="copyPrompt('p2-content')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #2</span>
+        </button>
+      </div>
+
+    </main>
+
+    <footer>
+        <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Social Strategy Genie. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    function copyPrompt(elementId) {
+      const button = event.currentTarget;
+      const btnText = button.querySelector('.button-text');
+      const originalText = btnText.textContent;
+      
+      const appValue = document.getElementById('app-input').value.trim() || "[App or Way]";
+      let promptTemplate = document.getElementById(elementId).textContent;
+      
+      // Replace the placeholder with actual user input
+      const finalPrompt = promptTemplate.replace(/\[App or Way\]/g, appValue);
+
+      navigator.clipboard.writeText(finalPrompt).then(() => {
+        btnText.textContent = 'Copied!';
+        button.classList.add('copied');
+        
+        setTimeout(() => {
+          btnText.textContent = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>
