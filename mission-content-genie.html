@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Content Genie - Tone Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #1e1b4b; 
+      --bg-gradient-end: #020617;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --card-border: rgba(129, 140, 248, 0.2);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-heading: #ffffff;
+      --accent-primary: #818cf8; 
+      --accent-hover: #a5b4fc;
+      --accent-success: #10b981;
+      --code-bg: rgba(0, 0, 0, 0.4);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+      --input-bg: rgba(15, 23, 42, 0.8);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      flex-grow: 1;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--accent-primary);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Input Section */
+    .input-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .input-group label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 15px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      resize: vertical;
+      min-height: 80px;
+      transition: all 0.3s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 15px rgba(129, 140, 248, 0.1);
+    }
+
+    .prompts-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .prompt-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px var(--shadow-color);
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    .prompt-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-primary);
+    }
+    .prompt-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .prompt-label::after {
+      content: "";
+      height: 1px;
+      flex-grow: 1;
+      background: var(--card-border);
+    }
+    .prompt-text {
+      background-color: var(--code-bg);
+      padding: 24px;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    .copy-button {
+      align-self: flex-end;
+      padding: 12px 24px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #020617;
+      background-color: var(--accent-primary);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .copy-button:hover {
+      background-color: var(--accent-hover);
+      box-shadow: 0 5px 15px rgba(129, 140, 248, 0.3);
+    }
+    .copy-button.copied {
+      background-color: var(--accent-success);
+      color: #fff;
+    }
+    .icon { width: 16px; height: 16px; }
+
+    footer {
+        margin-top: 60px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        padding-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Content Genie</h1>
+      <p class="subtitle">Multi-Step Content Strategy System</p>
+    </header>
+
+    <section class="input-section">
+      <div class="input-group">
+        <label>The content pillar</label>
+        <textarea id="pillar-input" placeholder="Enter your content pillar here..."></textarea>
+      </div>
+      <div class="input-group">
+        <label>Content Idea</label>
+        <textarea id="idea-input" placeholder="Enter your selected content idea here..."></textarea>
+      </div>
+    </section>
+
+    <main class="prompts-stack">
+      
+      <!-- Prompt #1 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #1: Master Instructions</div>
+        <pre class="prompt-text" id="p1-content">NOTE1:
+
+এই prompt-টা একবারে run করার prompt না। এটা একটা master system prompt বা content operating system।
+
+সবচেয়ে সহজভাবে বললে:
+
+> Layer 1 = Fixed engine
+> Layer 2 = Variable inputs
+
+তুমি Layer 1 কখনও change করবে না (unless improve করতে চাও)।
+
+শুধু Layer 2-এর placeholders fill করবে।
+
+তারপর AI-কে clear task দেবে।
+
+Step-by-Step Usage
+
+Step 1: Layer 1 untouched রাখো
+
+পুরো Universal Content Engine যেমন আছে তেমন রাখবে।
+
+এটা হলো AI-এর “brain”।
+
+এটা বলে দেয়:
+
+* কীভাবে ভাববে
+* কী avoid করবে
+* psychological journey কী হবে
+* framework কী হবে
+* content quality standard কী
+
+এটা normally change করো না।
+
+---
+
+Step 2: Layer 2 fill করো
+
+এখানে niche অনুযায়ী inputs বদলাবে।
+
+Example (Your Case)
+
+TARGET AUDIENCE
+
+Primary audience:
+
+People who are inwardly restless, emotionally overstimulated, socially fatigued, existentially questioning, spiritually curious but uncomfortable with dogma.
+
+Pain points:
+
+* inner emptiness
+* validation addiction
+* performance fatigue
+* loneliness despite connection
+* identity confusion
+* social media exhaustion
+
+Internal struggles:
+
+* “Why do I still feel empty?”
+* “Am I performing instead of living?”
+* “Have I drifted away from myself?”
+* “Where is peace?”
+
+Current awareness level:
+
+QUESTIONING
+
+---
+
+CORE THESIS
+
+Core belief / deeper truth:
+
+People suffer when the mind disconnects from a larger harmony and tries to operate only through ego, stimulation, and external validation.
+
+Desired transformation:
+
+Move audience from:
+
+restlessness, performance, emotional emptiness
+
+→ to →
+
+inner alignment, peace, authenticity
+
+---
+
+CONTENT DIRECTION
+
+Primary content pillars:
+
+* The Illusion of Performance
+* Inner Emptiness
+* Social Media Fatigue
+* Alignment
+* Quiet Crisis of Modern Life
+
+Preferred genres:
+
+* reflection
+* inward reflection
+* conversational essay
+* social media observation
+* aphorism
+
+Platform:
+
+FACEBOOK
+
+Desired tone:
+
+thoughtful, conversational, emotionally intelligent
+
+Avoid tone:
+
+preachy, guru-like, rigid spirituality, motivational cliché
+
+Vocabulary preference:
+
+modern conversational Bengali (India)
+
+---
+
+Step 3: Add ONE clear task
+
+এটা সবচেয়ে important।
+
+AI mind-reader না।
+
+তাই specific task দাও।
+
+Example Task 1
+
+Topic ideas generate করতে:
+
+> Generate 50 high-quality content outline ideas for the content pillar “The Illusion of Performance.”
+> Follow the required stage ratio and distribute ideas across Recognition, Reflection, Reframing, and Distillation.
+> Include:
+>
+> * stage
+> * genre
+> * hook
+> * emotional trigger
+> * outline angle
+> * recommended framework
+> * suggested ending direction
+
+---
+
+Example Task 2
+
+Weekly content calendar:
+
+> Create a 30-day content plan following the recommended content ecosystem ratio.
+> Ensure variety, avoid repetition, and maintain emotional progression.
+
+---
+
+Example Task 3
+
+Single outline generation:
+
+> Generate one high-quality content outline for:
+> Content Pillar: The Illusion of Performance
+> Genre: Conversational Essay
+> Stage: Recognition
+> Length target: 800 words
+
+---
+
+Example Task 4
+
+Hook generation:
+
+> Generate 50 emotionally resonant hooks for inwardly restless audiences around performance, validation, loneliness, and identity confusion.
+
+---
+
+Best Workflow (Recommended)
+
+তোমার মতো creator-এর জন্য আমি recommend করবো:
+
+Phase 1 — Big Picture
+
+Generate:
+
+> 100 content ideas
+
+---
+
+Phase 2 — Selection
+
+Choose:
+
+> top 20 ideas
+
+---
+
+Phase 3 — Outline
+
+Generate:
+
+> detailed outlines
+
+---
+
+Phase 4 — Writing
+
+Generate:
+
+> first draft
+
+---
+
+Phase 5 — Refinement
+
+Ask AI:
+
+> Make this less preachy and more emotionally intelligent.
+
+---
+
+Pro Tip (Very Important)
+
+এই prompt-এর biggest power আসে constraint থেকে।
+
+Bad request ❌
+
+> Give me content ideas.
+
+Good request ✅
+
+> Generate 20 Recognition-stage conversational essay ideas for emotionally exhausted creators struggling with performance fatigue.
+
+যত specific হবে,
+
+> quality ↑
+> genericness ↓
+
+আর একটা জিনিস:
+
+তুমি চাইলে আমি তোমার জন্য “ready-to-use short version”-ও বানিয়ে দিতে পারি (powerful but compact version), যেটা copy-paste করে দ্রুত run করা যাবে।
+
+
+NOTE2:
+
+
+হ্যাঁ — exactly। এই system সবচেয়ে ভালো কাজ করে multi-step workflow হিসেবে।
+
+মানে:
+
+> Prompt 1 → Output → Prompt 2 → Output → Prompt 3
+
+এভাবে।
+
+একবারে সব করতে গেলে AI অনেক সময়:
+
+* generic হয়ে যায়
+* repetitive হয়
+* focus lose করে
+* weak hooks দেয়
+* stage logic mix করে ফেলে
+
+তাই layered prompting better।
+
+তোমার use-case অনুযায়ী ideal workflow দিচ্ছি:
+
+ Prompt Flow System
+
+Prompt 1 = Content Idea Generation
+
+Goal:
+
+Raw strategic ideas generate করা
+
+এখানে শুধু idea বের করবে।
+
+এখনও outline না।
+
+Example Prompt 1
+
+> Generate 50 high-quality content ideas for the content pillar: “The Illusion of Performance.”
+> Follow the required stage distribution:
+>
+> * 50% Recognition
+> * 30% Reflection
+> * 15% Reframing
+> * 5% Distillation
+>
+> For each idea include:
+>
+> * content stage
+> * genre
+> * title/topic angle
+> * hook
+> * emotional trigger
+> * why this idea works
+>
+> Avoid repetition and generic self-help angles.
+
+Output:
+
+তুমি পাবে:
+
+৫০টা strong idea।
+
+---
+
+Prompt 2 = Idea Expansion into Outline
+
+Goal:
+
+একটা selected idea → detailed outline
+
+এখানে তুমি best idea pick করবে।
+
+Example Prompt 2
+
+> Expand the following content idea into a strategic outline.
+>
+> Content Idea:
+> “আমরা কি জীবন বাঁচছি, নাকি জীবনটা কেমন দেখাচ্ছে সেটা manage করছি?”
+>
+> Requirements:
+>
+> * Stage: Recognition
+> * Genre: Conversational Essay
+> * Audience: inwardly restless young adults
+> * Platform: Facebook
+> * Length target: 800–1200 words
+>
+> Include:
+>
+> * opening hook
+> * emotional progression
+> * outline structure
+> * key talking points
+> * emotional transition
+> * suggested ending direction
+> * recommended framework (ORM / QFD / DSR)
+
+Output:
+
+তুমি detailed outline পাবে।
+
+---
+
+Prompt 3 = Writing Draft
+
+Goal:
+
+Outline → first draft
+
+Example Prompt 3
+
+> Write the full content based on the approved outline.
+>
+> Requirements:
+>
+> * conversational Bengali (India)
+> * emotionally intelligent
+> * modern and natural language
+> * non-preachy
+> * psychologically nuanced
+> * relatable but deep
+> * no cliché self-help tone
+> * follow Recognition → Reflection → Reframing flow naturally
+
+Output:
+
+পূর্ণ লেখা।
+
+---
+
+Prompt 4 = Refinement
+
+Goal:
+
+Polish
+
+এটা super important।
+
+Example Prompt 4
+
+> Improve this draft.
+>
+> Make it:
+>
+> * less preachy
+> * more emotionally resonant
+> * deeper but simpler
+> * more psychologically accurate
+> * stronger opening hook
+> * smoother emotional transitions
+>
+> Remove:
+>
+> * generic lines
+> * repetition
+> * abstract explanations
+
+---
+
+ Why this workflow is powerful
+
+কারণ এটা creator-এর মতো কাজ করে।
+
+তুমি কি এক বসায়:
+
+> idea → outline → draft → edit
+
+সব করো?
+
+না।
+
+তুমি ধাপে ধাপে করো।
+
+AI-এর ক্ষেত্রেও same।
+
+---
+
+Golden Rule
+
+Diverge → Converge
+
+Step 1:
+
+Generate many ideas
+
+(creative expansion)
+
+Step 2:
+
+Choose best few
+
+(selection)
+
+Step 3:
+
+Expand one
+
+(focus)
+
+Step 4:
+
+Refine
+
+(polish)
+
+এই process-এ quality dramatically better হয়।
+
+My recommendation for you:
+
+Prompt 1 → 30–50 ideas
+↓
+Pick top 5
+↓
+Prompt 2 → outline
+↓
+Pick best 1
+↓
+Prompt 3 → write
+↓
+Prompt 4 → refine
+
+এটাই professional creator workflow।</pre>
+        <button class="copy-button" onclick="copyPrompt('p1-content')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #1</span>
+        </button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #2: Idea Generation</div>
+        <pre class="prompt-text" id="p2-content">Generate 50 high-quality content ideas for the content pillar: "[The content pillar]."
+Follow the required stage distribution:
+
+* 50% Recognition
+* 30% Reflection
+* 15% Reframing
+* 5% Distillation
+
+For each idea include:
+
+* content stage
+* genre
+* title/topic angle
+* hook
+* emotional trigger
+* why this idea works
+
+Avoid repetition and generic self-help angles.</pre>
+        <button class="copy-button" onclick="copyPrompt('p2-content')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #2</span>
+        </button>
+      </div>
+
+      <!-- Prompt #3 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #3: Strategic Outline</div>
+        <pre class="prompt-text" id="p3-content">Expand the following content idea into a strategic outline.
+
+Content Idea:
+"[Content Idea]"
+
+Requirements:
+
+* Stage: Recognition
+* Genre: Conversational Essay
+* Audience: inwardly restless young adults
+* Platform: Facebook
+* Length target: 800–1200 words
+
+Include:
+
+* opening hook
+* emotional progression
+* outline structure
+* key talking points
+* emotional transition
+* suggested ending direction
+* recommended framework (ORM / QFD / DSR)</pre>
+        <button class="copy-button" onclick="copyPrompt('p3-content')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #3</span>
+        </button>
+      </div>
+
+      <!-- Prompt #4 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #4: Full Content Writing</div>
+        <pre class="prompt-text" id="p4-content">Write the full content based on the approved outline.
+
+Requirements:
+
+* conversational Bengali (India)
+* emotionally intelligent
+* modern and natural language
+* non-preachy
+* psychologically nuanced
+* relatable but deep
+* no cliché self-help tone
+* follow Recognition → Reflection → Reframing flow naturally</pre>
+        <button class="copy-button" onclick="copyPrompt('p4-content')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #4</span>
+        </button>
+      </div>
+
+      <!-- Prompt #5 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #5: Content Refinement</div>
+        <pre class="prompt-text" id="p5-content">Improve this draft.
+
+Make it:
+
+* less preachy
+* more emotionally resonant
+* deeper but simpler
+* more psychologically accurate
+* stronger opening hook
+* smoother emotional transitions
+
+Remove:
+
+* generic lines
+* repetition
+* abstract explanations</pre>
+        <button class="copy-button" onclick="copyPrompt('p5-content')">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #5</span>
+        </button>
+      </div>
+
+    </main>
+
+    <footer>
+        <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Social Strategy Genie. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    function copyPrompt(elementId) {
+      const button = event.currentTarget;
+      const btnText = button.querySelector('.button-text');
+      const originalText = btnText.textContent;
+      
+      const pillarValue = document.getElementById('pillar-input').value.trim() || "[The content pillar]";
+      const ideaValue = document.getElementById('idea-input').value.trim() || "[Content Idea]";
+      
+      let promptTemplate = document.getElementById(elementId).textContent;
+      
+      // Perform dynamic placeholder replacements
+      let finalPrompt = promptTemplate.replace(/\[The content pillar\]/g, pillarValue);
+      finalPrompt = finalPrompt.replace(/\[Content Idea\]/g, ideaValue);
+
+      navigator.clipboard.writeText(finalPrompt).then(() => {
+        btnText.textContent = 'Copied!';
+        button.classList.add('copied');
+        
+        setTimeout(() => {
+          btnText.textContent = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>
