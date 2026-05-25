@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Short Story Foundation - Tone Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #312e81; 
+      --bg-gradient-end: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --card-border: rgba(139, 92, 246, 0.2);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-heading: #ffffff;
+      --accent-primary: #a78bfa; 
+      --accent-hover: #c4b5fd;
+      --accent-success: #10b981;
+      --code-bg: rgba(0, 0, 0, 0.4);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      flex-grow: 1;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--accent-primary);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .prompts-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    /* Prompt Card Styles */
+    .prompt-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px var(--shadow-color);
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    .prompt-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-primary);
+    }
+    .prompt-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .prompt-label::after {
+      content: "";
+      height: 1px;
+      flex-grow: 1;
+      background: var(--card-border);
+    }
+    .prompt-text {
+      background-color: var(--code-bg);
+      padding: 24px;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    /* Button Styles */
+    .copy-button {
+      align-self: flex-end;
+      padding: 12px 24px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #1e1b4b;
+      background-color: var(--accent-primary);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .copy-button:hover {
+      background-color: var(--accent-hover);
+      box-shadow: 0 5px 15px rgba(167, 139, 250, 0.3);
+    }
+    .copy-button.copied {
+      background-color: var(--accent-success);
+      color: #fff;
+    }
+    .icon { width: 16px; height: 16px; }
+
+    footer {
+        margin-top: 60px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        padding-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>My Short Story Foundation</h1>
+      <p class="subtitle">Literary Narrative Architect</p>
+    </header>
+
+    <main class="prompts-stack">
+      
+      <!-- Prompt #1 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #1: Story Analysis</div>
+        <pre class="prompt-text">আপনি একজন বিশেষজ্ঞ সাহিত্যিক গল্পকার, emotional story strategist, psychological narrative analyst, এবং character-driven short fiction developer।
+
+আমি নীচে দেওয়া story foundation-এর উপর ভিত্তি করে একটি emotionally powerful, psychologically layered ছোটগল্প develop করতে চাই।
+
+গল্পের আবহ হবে ভারতীয় বাঙালী সাংস্কৃতিক বাস্তবতায় grounded একটি emotionally immersive জগৎ, শহর, বা সামাজিক পরিবেশ।
+
+আপনার কাজ হলো নীচে দেওয়া emotional elements-গুলো analyse করে গল্পটির সবচেয়ে শক্তিশালী core emotional premise, thematic depth, emotional architecture, এবং narrative direction বের করা।
+
+IMPORTANT RULES:
+- psychological realism বজায় রাখুন
+- melodrama এড়ান
+- emotional subtlety বজায় রাখুন
+- cliché conflict ব্যবহার করবেন না
+- layered interpretation দিন
+- literary depth বজায় রাখুন
+- intimate character focus বজায় রাখুন
+- grounded human behavior ব্যবহার করুন
+- unnecessary exposition এড়ান
+- overwriting করবেন না
+- concise কিন্তু insightful থাকুন
+- emotionally intelligent interpretation দিন
+- short story format-এর emotional economy বজায় রাখুন
+- large-scale plot complexity এড়ান
+- conflict-কে emotionally personal রাখুন
+
+OUTPUT STYLE:
+- cinematic
+- emotionally immersive
+- psychologically layered
+- literary but natural
+- subtle but emotionally resonant
+- intimate and character-driven
+
+RESPONSE LENGTH RULE:
+প্রতিটি section concise কিন্তু layered রাখুন।
+অতিরিক্ত explanation বা exposition এড়ান।
+Insightful analysis দিন, কিন্তু unnecessarily long হবেন না।
+
+নীচের structure অনুসরণ করুন:
+
+SECTION 1 — CORE EMOTIONAL PREMISE
+
+1. এই emotional setup-এর সবচেয়ে শক্তিশালী core emotional premise কী?
+2. গল্পটির মূল emotional engine কী?
+3. এই premise emotionally কেন compelling?
+
+SECTION 2 — CONFLICT DYNAMICS
+
+1. protagonist-এর internal conflict কী?
+2. external reality কীভাবে সেই conflict-কে intensify করছে?
+3. protagonist ভিতরে আসলে কী চাইছে?
+4. সে emotionally নিজেকেই কীভাবে sabotage করছে?
+5. গল্পটির সবচেয়ে গুরুত্বপূর্ণ emotional pressure point কোথায়?
+
+SECTION 3 — THEMATIC DEPTH
+
+1. গল্পটির thematic contradiction কী?
+2. গল্পটির underlying human truth কী হতে পারে?
+3. protagonist emotionally কী learn করতে পারে?
+4. গল্পটির emotional irony কী?
+
+SECTION 4 — DRAMATIC IRONY
+
+1. সবচেয়ে শক্তিশালী dramatic irony কী হতে পারে?
+2. পাঠক কী বুঝবে যা protagonist প্রথমে বুঝবে না?
+3. এই irony গল্পের emotional impact কীভাবে বাড়াবে?
+
+SECTION 5 — ENDING EMOTION
+
+1. ending-এর lingering emotional effect কী হওয়া উচিত?
+2. সেই emotion সবচেয়ে গভীরভাবে কীভাবে deliver করা যেতে পারে?
+3. গল্প শেষে পাঠকের মনে কী ধরনের emotional aftertaste থাকা উচিত?
+
+SECTION 6 — NARRATIVE DIRECTION
+
+- গল্পের সবচেয়ে কার্যকর narrative direction দিন
+- emotional trajectory লিখুন
+- protagonist-এর emotional transformation লিখুন
+- গল্পটির tone explain করুন
+- short story format-এ এই direction কেন সবচেয়ে কার্যকর হবে ব্যাখ্যা করুন
+- গল্পটি intimate ও emotionally resonant রাখতে কোন approach সবচেয়ে কার্যকর হবে তা বলুন
+
+STORY FOUNDATION:
+
+PRIMARY STORY IDEA:
+[PRIMARY STORY IDEA]
+
+PROTAGONIST'S MAIN PSYCHOLOGICAL CONFLICT:
+[INPUT]
+
+INNER DESIRE:
+[INPUT]
+
+EXTERNAL OBSTACLE:
+[INPUT]
+
+LINGERING END EMOTION:
+[INPUT]
+
+OPTIONAL CONTEXT:
+
+PROTAGONIST AGE:
+[INPUT]
+
+SETTING:
+[INPUT]
+
+TIME PERIOD:
+[INPUT]
+
+GENRE:
+[INPUT]
+
+LITERARY TONE:
+[minimalist / melancholic / intimate / surreal / grounded / lyrical / realist]
+
+NARRATIVE SCALE:
+[intimate / personal / socially layered / memory-driven]</pre>
+        <button class="copy-button">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #1</span>
+        </button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #2: Macro Structure</div>
+        <pre class="prompt-text">আপনি একজন বিশেষজ্ঞ narrative architect, short story structural strategist, এবং emotional pacing analyst।
+
+বর্তমান Story Foundation, Emotional Premise, Narrative Direction, এবং established Story Bible অনুসরণ করে পুরো ছোটোগল্পটির chronological event chain-কে classic Three-Act Structure-এ map করুন।
+
+তারপর গল্পটিকে একটি tightly constructed “Macro Story Table” আকারে সাজান।
+
+IMPORTANT CONTEXT:
+এটি উপন্যাস নয়।
+এটি একটি psychologically layered, emotionally dense short story।
+
+তাই:
+- প্রতিটি scene structurally necessary হতে হবে
+- pacing tight রাখতে হবে
+- emotional escalation দ্রুত build হতে হবে
+- repetition এড়াতে হবে
+- every scene must create irreversible emotional movement
+- scenes must deepen either conflict, character, or thematic tension
+- unnecessary exposition এড়ান
+- emotional economy বজায় রাখুন
+- story-কে intimate এবং character-driven রাখুন
+
+STRUCTURAL GOAL:
+গল্পটির emotional progression, conflict escalation, এবং thematic payoff-কে সবচেয়ে cinematic ও emotionally effectiveভাবে organize করুন।
+
+নীচের table format ব্যবহার করুন:
+
+| Act | Scene Number | Main Event / Turning Point | Core Conflict | Emotional Shift | Narrative Purpose |
+
+COLUMN RULES:
+
+1. [Act]
+- Act I — Setup
+- Act II — Confrontation
+- Act III — Resolution
+
+2. [Scene Number]
+- Scene 1, Scene 2, Scene 3...
+
+3. [Main Event / Turning Point]
+- scene-এর সবচেয়ে meaningful event বা irreversible turning point
+
+4. [Core Conflict]
+- scene-এর মূল emotional এবং situational conflict
+- internal + external tension দুটোই identify করুন
+
+5. [Emotional Shift]
+- scene শুরু ও শেষে protagonist emotionally কীভাবে বদলায়
+
+6. [Narrative Purpose]
+Possible functions:
+- setup
+- foreshadowing
+- emotional pressure escalation
+- thematic reinforcement
+- revelation
+- emotional reversal
+- relationship fracture
+- midpoint shift
+- climax setup
+- thematic payoff
+- emotional resolution
+
+ADDITIONAL ANALYSIS:
+
+1. Midpoint Scene clearly identify করুন
+- কেন এটি emotional pivot তা explain করুন
+
+2. Climax Scene mark করুন
+- protagonist-এর deepest emotional confrontation explain করুন
+
+3. Final Emotional Image explain করুন
+- গল্পের শেষ emotional impression কী হবে?
+
+4. Story Pacing Analysis দিন
+- কোথায় tension accelerate করছে?
+- কোথায় emotional silence কাজ করছে?
+- কোথায় compression সবচেয়ে effective?
+
+5. Structural Weakness Check করুন
+- কোন scene remove করলে গল্প significantly দুর্বল হবে না তা identify করুন
+- কোন scene merge করা যায় কিনা তা বলুন
+
+OUTPUT STYLE:
+- cinematic
+- psychologically layered
+- emotionally intelligent
+- concise but insightful
+- structurally precise</pre>
+        <button class="copy-button">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #2</span>
+        </button>
+      </div>
+
+      <!-- Prompt #3 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #3: Scene Expansion</div>
+        <pre class="prompt-text">আপনি একজন cinematic scene designer, psychological fiction writer, এবং emotional micro-conflict specialist।
+
+বর্তমান Story Bible, Narrative Direction, Macro Story Structure, এবং established Scene Architecture অনুসরণ করে Scene [X]-কে expand করুন।
+
+এই scene-টিকে emotionally compressed, psychologically layered, এবং narratively meaningful করে develop করুন।
+
+IMPORTANT RULES:
+- literary realism বজায় রাখুন
+- overwriting করবেন না
+- emotional subtlety বজায় রাখুন
+- scene-কে overly dramatic করবেন না
+- exposition dump এড়ান
+- dialogue natural রাখুন
+- subtext-driven interaction ব্যবহার করুন
+- sensory atmosphere ব্যবহার করুন
+- silence এবং hesitation meaningfulভাবে ব্যবহার করুন
+- every line must create emotional movement
+- scene-এর emotional objective clear থাকতে হবে
+- POV consistency বজায় রাখুন
+- pacing tight রাখুন
+
+SECTION 1 — SCENE ANALYSIS
+
+1. Scene Goal
+- protagonist এই scene-এ emotionally বা practically কী চাইছে?
+
+2. Conflict Source
+- scene-এর friction কোথা থেকে তৈরি হচ্ছে?
+
+3. Character Emotion
+- protagonist-এর visible emotion বনাম hidden emotion কী?
+
+4. Subtext
+- চরিত্রগুলো আসলে কী অনুভব করছে যা সরাসরি বলছে না?
+
+5. Sensory Atmosphere
+- পরিবেশ কীভাবে emotional tone reinforce করছে?
+
+6. Dialogue Tension
+- conversation-এর underlying tension কোথায়?
+
+7. Scene Turn
+- scene-এর emotional reversal বা realization কী?
+
+8. Ending Hook
+- scene শেষে কোন unresolved emotional pull পাঠককে সামনে ঠেলে দেবে?
+
+SECTION 2 — SCENE EXECUTION
+
+তারপর লিখুন:
+
+- concise scene summary
+- cinematic prose direction
+- emotional rhythm explanation
+- body language cues
+- silence / pause usage
+- visual emphasis points
+- emotional compression strategy
+
+SECTION 3 — MICRO-PACING ANALYSIS
+
+Analyse করুন:
+- কোথায় scene slow breathing নিচ্ছে?
+- কোথায় tension tighten করছে?
+- কোথায় subtext strongest?
+- scene-এর emotional peak কোথায়?
+
+OUTPUT STYLE:
+- cinematic intimacy
+- psychological realism
+- layered subtext
+- restrained emotional intensity
+- visually immersive but controlled</pre>
+        <button class="copy-button">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #3</span>
+        </button>
+      </div>
+
+      <!-- Prompt #4 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #4: Full Execution</div>
+        <pre class="prompt-text">আপনি একজন বিশেষজ্ঞ সাহিত্যিক গল্পকার, cinematic fiction writer, psychological realism specialist, এবং emotionally immersive short fiction author।
+
+বর্তমান Scene Architecture, Macro Story Structure, Emotional Premise, Narrative Direction, এবং established Story Bible অনুসরণ করে পুরো ছোটোগল্পটি লিখুন।
+
+GOAL:
+একটি emotionally resonant, psychologically layered, cinematic short story লিখুন যা intimate human conflict-এর মাধ্যমে গভীর emotional impact তৈরি করে।
+
+IMPORTANT RULES:
+- literary realism বজায় রাখুন
+- overwriting করবেন না
+- melodrama এড়ান
+- emotional subtlety বজায় রাখুন
+- exposition dump এড়ান
+- dialogue natural রাখুন
+- subtext-driven interaction ব্যবহার করুন
+- sensory details meaningfulভাবে ব্যবহার করুন
+- pacing tight রাখুন
+- emotional compression ব্যবহার করুন
+- every scene must create narrative movement
+- silence, pause, hesitation meaningfulভাবে ব্যবহার করুন
+- character psychology organically reveal করুন
+- emotional transitions smooth রাখুন
+- thematic consistency বজায় রাখুন
+- intimate emotional focus বজায় রাখুন
+- unnecessary philosophical monologue এড়ান
+- cliché emotional payoff ব্যবহার করবেন না
+
+WRITING STYLE:
+- cinematic intimacy
+- psychological realism
+- compressed emotional intensity
+- layered subtext
+- emotionally restrained prose
+- visual storytelling awareness
+- meaningful silence
+- sensory realism
+- literary but natural
+
+NARRATIVE EXECUTION RULES:
+
+1. Scene transitions organic রাখুন
+2. Emotional escalation gradual কিন্তু inevitable রাখুন
+3. Conflict emotionally personal রাখুন
+4. Internal conflict subtly external behavior-এ reflect করুন
+5. Every dialogue line-এর নিচে emotional tension থাকতে হবে
+6. Setting-কে emotional mirror হিসেবে ব্যবহার করুন
+7. Final payoff emotionally earned হতে হবে
+
+ENDING REQUIREMENTS:
+
+- final emotional image শক্তিশালী করুন
+- lingering emotional aftertaste তৈরি করুন
+- ending over-explain করবেন না
+- emotional ambiguity থাকলে সেটি meaningful হতে হবে
+- শেষ paragraph emotionally resonant রাখুন
+- পাঠকের মনে quiet emotional ache রেখে শেষ করুন
+
+OUTPUT GOAL:
+গল্পটি পড়লে যেন মনে হয় এটি:
+- lived-in
+- emotionally honest
+- psychologically true
+- cinematically visual
+- quietly devastating</pre>
+        <button class="copy-button">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <span class="button-text">Copy Prompt #4</span>
+        </button>
+      </div>
+
+    </main>
+
+    <footer>
+        <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Social Strategy Genie. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    document.querySelectorAll('.copy-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const textToCopy = button.parentElement.querySelector('.prompt-text').textContent;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          const btnText = button.querySelector('.button-text');
+          const prevText = btnText.textContent;
+          
+          btnText.textContent = 'Copied!';
+          button.classList.add('copied');
+          
+          setTimeout(() => {
+            btnText.textContent = prevText;
+            button.classList.remove('copied');
+          }, 2000);
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
