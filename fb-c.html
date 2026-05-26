@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing Framework Tables</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #111;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: auto;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      padding-left: 4px;
+    }
+
+    .table-wrapper {
+      background: white;
+      border-radius: 16px;
+      overflow-x: auto;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    th,
+    td {
+      border: 1px solid #e5e5e5;
+      padding: 16px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 15px;
+    }
+
+    th {
+      background: #111;
+      color: white;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    /* UNIVERSAL MOBILE CARD TABLE */
+    @media (max-width: 768px) {
+
+      body {
+        padding: 12px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        font-size: 14px;
+      }
+
+      .table-wrapper table,
+      .table-wrapper thead,
+      .table-wrapper tbody,
+      .table-wrapper th,
+      .table-wrapper td,
+      .table-wrapper tr {
+        display: block;
+        width: 100%;
+      }
+
+      .table-wrapper thead {
+        display: none;
+      }
+
+      .table-wrapper table {
+        min-width: 100%;
+      }
+
+      .table-wrapper tr {
+        background: #fff;
+        margin-bottom: 18px;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #e5e5e5;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+      }
+
+      .table-wrapper td {
+        border: none;
+        border-bottom: 1px solid #f1f1f1;
+        padding: 14px;
+        padding-left: 46%;
+        position: relative;
+        min-height: 58px;
+        display: flex;
+        align-items: center;
+        line-height: 1.5;
+      }
+
+      .table-wrapper td:last-child {
+        border-bottom: none;
+      }
+
+      .table-wrapper td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 14px;
+        top: 14px;
+        width: 38%;
+        font-weight: 700;
+        color: #111;
+        line-height: 1.4;
+      }
+    }
+
+    @media (max-width: 480px) {
+
+      h2 {
+        font-size: 18px;
+      }
+
+      th,
+      td {
+        font-size: 13px;
+        padding: 10px;
+      }
+
+      .table-wrapper td {
+        padding-left: 48%;
+      }
+
+      .table-wrapper td::before {
+        width: 40%;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- TABLE 1 -->
+
+    <h2>TABLE</h2>
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Writing Type</th>
+            <th>কোথা থেকে শুরু করবেন</th>
+            <th>Reader প্রথমে কি অনুভব করবে</th>
+            <th>মাঝখানে কি করবেন</th>
+            <th>ধীরে ধীরে কোথায় নিয়ে যাবেন</th>
+            <th>শেষের অনুভূতি / Realisation</th>
+            <th>সবচেয়ে উপযুক্ত Tone</th>
+            <th>কি Avoid করবেন</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td data-label="Writing Type">Reflection (২০০–৫০০ শব্দ)</td>
+            <td data-label="কোথা থেকে শুরু করবেন">ব্যক্তিগত observation বা emotional moment</td>
+            <td data-label="Reader প্রথমে কি অনুভব করবে">“এটা আমিও অনুভব করেছি”</td>
+            <td data-label="মাঝখানে কি করবেন">feeling → pattern → insight</td>
+            <td data-label="ধীরে ধীরে কোথায় নিয়ে যাবেন">inward emptiness / silence / meaning</td>
+            <td data-label="শেষের অনুভূতি / Realisation">quiet realisation</td>
+            <td data-label="সবচেয়ে উপযুক্ত Tone">calm, thoughtful, restrained</td>
+            <td data-label="কি Avoid করবেন">heavy philosophy দিয়ে শুরু</td>
+          </tr>
+
+          <tr>
+            <td data-label="Writing Type">Aphorism</td>
+            <td data-label="কোথা থেকে শুরু করবেন">familiar human contradiction</td>
+            <td data-label="Reader প্রথমে কি অনুভব করবে">instant recognition</td>
+            <td data-label="মাঝখানে কি করবেন">hidden truth compress করা</td>
+            <td data-label="ধীরে ধীরে কোথায় নিয়ে যাবেন">deeper psychological hint</td>
+            <td data-label="শেষের অনুভূতি / Realisation">lingering impact</td>
+            <td data-label="সবচেয়ে উপযুক্ত Tone">sharp, poetic, minimal</td>
+            <td data-label="কি Avoid করবেন">over-explaining</td>
+          </tr>
+
+          <tr>
+            <td data-label="Writing Type">Conversational Essay</td>
+            <td data-label="কোথা থেকে শুরু করবেন">everyday relatable observation</td>
+            <td data-label="Reader প্রথমে কি অনুভব করবে">connection</td>
+            <td data-label="মাঝখানে কি করবেন">example + psychology + social pattern</td>
+            <td data-label="ধীরে ধীরে কোথায় নিয়ে যাবেন">broader existential insight</td>
+            <td data-label="শেষের অনুভূতি / Realisation">reflective pause</td>
+            <td data-label="সবচেয়ে উপযুক্ত Tone">intimate, intelligent, conversational</td>
+            <td data-label="কি Avoid করবেন">lecture tone</td>
+          </tr>
+
+          <tr>
+            <td data-label="Writing Type">Real Example Writing</td>
+            <td data-label="কোথা থেকে শুরু করবেন">বাস্তব ঘটনা বা scene</td>
+            <td data-label="Reader প্রথমে কি অনুভব করবে">credibility + emotional recognition</td>
+            <td data-label="মাঝখানে কি করবেন">ঘটনা analyse করা</td>
+            <td data-label="ধীরে ধীরে কোথায় নিয়ে যাবেন">human behaviour pattern</td>
+            <td data-label="শেষের অনুভূতি / Realisation">“এটা শুধু ওই লোকটার না”</td>
+            <td data-label="সবচেয়ে উপযুক্ত Tone">grounded, observational</td>
+            <td data-label="কি Avoid করবেন">abstract jargon</td>
+          </tr>
+
+          <tr>
+            <td data-label="Writing Type">Social Media Observation</td>
+            <td data-label="কোথা থেকে শুরু করবেন">online behaviour pattern</td>
+            <td data-label="Reader প্রথমে কি অনুভব করবে">self-recognition</td>
+            <td data-label="মাঝখানে কি করবেন">validation / identity psychology unpack করা</td>
+            <td data-label="ধীরে ধীরে কোথায় নিয়ে যাবেন">digital emptiness / self-alienation</td>
+            <td data-label="শেষের অনুভূতি / Realisation">uncomfortable awareness</td>
+            <td data-label="সবচেয়ে উপযুক্ত Tone">analytical but human</td>
+            <td data-label="কি Avoid করবেন">moral policing</td>
+          </tr>
+
+          <tr>
+            <td data-label="Writing Type">Inward Reflection</td>
+            <td data-label="কোথা থেকে শুরু করবেন">নিজের ভিতরের conflict</td>
+            <td data-label="Reader প্রথমে কি অনুভব করবে">vulnerability</td>
+            <td data-label="মাঝখানে কি করবেন">self-questioning</td>
+            <td data-label="ধীরে ধীরে কোথায় নিয়ে যাবেন">deeper self-awareness</td>
+            <td data-label="শেষের অনুভূতি / Realisation">quiet emotional truth</td>
+            <td data-label="সবচেয়ে উপযুক্ত Tone">intimate, psychologically honest</td>
+            <td data-label="কি Avoid করবেন">dramatic self-pity</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+
+
+    <!-- TABLE 2 -->
+
+    <h2>Universal Emotional Progression Framework</h2>
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th>কি করবেন</th>
+            <th>Example Direction</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td data-label="Stage">১. Familiar Pain</td>
+            <td data-label="কি করবেন">relatable human discomfort দিয়ে শুরু</td>
+            <td data-label="Example Direction">loneliness, comparison, anxiety</td>
+          </tr>
+
+          <tr>
+            <td data-label="Stage">২. Observable Behaviour</td>
+            <td data-label="কি করবেন">মানুষ কি করছে দেখান</td>
+            <td data-label="Example Direction">endless scrolling, validation seeking</td>
+          </tr>
+
+          <tr>
+            <td data-label="Stage">৩. Hidden Psychology</td>
+            <td data-label="কি করবেন">behaviour-এর ভিতরের emotional need দেখান</td>
+            <td data-label="Example Direction">fear of insignificance, emotional emptiness</td>
+          </tr>
+
+          <tr>
+            <td data-label="Stage">৪. Pattern Recognition</td>
+            <td data-label="কি করবেন">এটা isolated না — collective pattern</td>
+            <td data-label="Example Direction">“অনেক মানুষই…”</td>
+          </tr>
+
+          <tr>
+            <td data-label="Stage">৫. Existential Opening</td>
+            <td data-label="কি করবেন">deeper question তুলুন</td>
+            <td data-label="Example Direction">“হয়তো আমরা…”</td>
+          </tr>
+
+          <tr>
+            <td data-label="Stage">৬. Philosophical Direction</td>
+            <td data-label="কি করবেন">subtle দর্শনের দিকে যান</td>
+            <td data-label="Example Direction">inward silence, disconnection from self</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+
+
+    <!-- TABLE 3 -->
+
+    <h2>Writing Planning Table (Before Writing)</h2>
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Planning Element</th>
+            <th>কি ঠিক করবেন</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td data-label="Planning Element">Core Human Pain</td>
+            <td data-label="কি ঠিক করবেন">loneliness? validation addiction? purposelessness?</td>
+          </tr>
+
+          <tr>
+            <td data-label="Planning Element">Observable Behaviour</td>
+            <td data-label="কি ঠিক করবেন">মানুষ বাইরে কি করছে?</td>
+          </tr>
+
+          <tr>
+            <td data-label="Planning Element">Emotional Contradiction</td>
+            <td data-label="কি ঠিক করবেন">বাইরে confident, ভিতরে empty?</td>
+          </tr>
+
+          <tr>
+            <td data-label="Planning Element">Hidden Psychological Need</td>
+            <td data-label="কি ঠিক করবেন">acceptance? identity? connection?</td>
+          </tr>
+
+          <tr>
+            <td data-label="Planning Element">Deeper Insight</td>
+            <td data-label="কি ঠিক করবেন">আসল সমস্যাটা কি?</td>
+          </tr>
+
+          <tr>
+            <td data-label="Planning Element">Philosophical Direction</td>
+            <td data-label="কি ঠিক করবেন">কোন deeper truth-এর দিকে নিয়ে যাবেন?</td>
+          </tr>
+
+          <tr>
+            <td data-label="Planning Element">Ending Feeling</td>
+            <td data-label="কি ঠিক করবেন">reader শেষে কি অনুভব করবে?</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+
+
+    <!-- TABLE 4 -->
+
+    <h2>“Preachy না হয়ে Philosophical” হওয়ার Formula</h2>
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Preachy Version</th>
+            <th>Better Version</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td data-label="Preachy Version">“মানুষ তার আত্মিক কেন্দ্র হারিয়েছে”</td>
+            <td data-label="Better Version">“মানুষ এখন চুপচাপ নিজের সাথে থাকতে কষ্ট বোধ করে”</td>
+          </tr>
+
+          <tr>
+            <td data-label="Preachy Version">“Social media মানুষকে নষ্ট করছে”</td>
+            <td data-label="Better Version">“অনেক সময় মানুষ মুহূর্তটা বাঁচার আগে ভাবছে, এটা পোস্ট করলে কেমন দেখাবে”</td>
+          </tr>
+
+          <tr>
+            <td data-label="Preachy Version">“মানুষকে inward হতে হবে”</td>
+            <td data-label="Better Version">“হয়তো আমরা এত noise-এর মধ্যে আছি যে নিজের ভিতরের শব্দটাই আর শুনতে পাচ্ছি না”</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+
+
+    <!-- TABLE 5 -->
+
+    <h2>সবচেয়ে কার্যকর Flow</h2>
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Wrong Order</th>
+            <th>Effective Order</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td data-label="Wrong Order">Philosophy → Human Experience</td>
+            <td data-label="Effective Order">Human Experience → Philosophy</td>
+          </tr>
+
+          <tr>
+            <td data-label="Wrong Order">Conclusion → Emotion</td>
+            <td data-label="Effective Order">Emotion → Realisation</td>
+          </tr>
+
+          <tr>
+            <td data-label="Wrong Order">Teaching → Recognition</td>
+            <td data-label="Effective Order">Recognition → Insight</td>
+          </tr>
+
+          <tr>
+            <td data-label="Wrong Order">Abstract Truth</td>
+            <td data-label="Effective Order">Lived Reality</td>
+          </tr>
+
+          <tr>
+            <td data-label="Wrong Order">“আসল সত্য হলো…”</td>
+            <td data-label="Effective Order">“হয়তো…” / “খেয়াল করলে…”</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+
+
+    <!-- TABLE 6 -->
+
+    <h2>Golden Rule</h2>
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Do This</th>
+            <th>Not This</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td data-label="Do This">মানুষকে নিজের অনুভূতি চিনতে সাহায্য করুন</td>
+            <td data-label="Not This">মানুষকে “শিক্ষা” দিতে যাবেন না</td>
+          </tr>
+
+          <tr>
+            <td data-label="Do This">observation ব্যবহার করুন</td>
+            <td data-label="Not This">declaration ব্যবহার করবেন না</td>
+          </tr>
+
+          <tr>
+            <td data-label="Do This">subtle questioning করুন</td>
+            <td data-label="Not This">absolute truth announce করবেন না</td>
+          </tr>
+
+          <tr>
+            <td data-label="Do This">emotional recognition তৈরি করুন</td>
+            <td data-label="Not This">superiority tone আনবেন না</td>
+          </tr>
+
+          <tr>
+            <td data-label="Do This">gradual unfolding করুন</td>
+            <td data-label="Not This">sudden metaphysical jump করবেন না</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</body>
+</html>
