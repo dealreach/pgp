@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Special Re:Write Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #020617;
+      --bg-gradient-end: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #22d3ee;
+      --accent-hover: #67e8f9;
+      --accent-success: #10b981;
+      --code-bg: rgba(0, 0, 0, 0.3);
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: fixed linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 60px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #fff;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .sub-header {
+      color: var(--accent-primary);
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .prompt-workflow {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 35px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .step-label {
+      font-weight: 800;
+      font-size: 0.85rem;
+      background: var(--accent-primary);
+      color: #020617;
+      padding: 6px 16px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .prompt-content {
+      background: var(--code-bg);
+      padding: 25px;
+      border-radius: 16px;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 1rem;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 25px;
+      line-height: 1.6;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .prompt-content::-webkit-scrollbar { width: 8px; }
+    .prompt-content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+
+    .copy-btn {
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+      padding: 12px 30px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      width: fit-content;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-primary);
+      color: #020617;
+      transform: translateY(-2px);
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: white;
+    }
+
+    .footer {
+      margin-top: 100px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .step-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Special Re:Write</h1>
+      <p class="sub-header">Advanced Writing & Psychology Framework</p>
+    </header>
+
+    <div class="prompt-workflow">
+      
+      <!-- Prompt #1 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #1: Core Analysis</span></div>
+        <div class="prompt-content" id="p1">Please review the content or the core belief of the content below on which I want to write a content and answer the following questions:
+
+- এই content-এর মূল emotional feelingটা কি?
+
+- এই content-এর ভিতরে কোনো deeper human truth আছে কি?
+
+- এই content কি reader-কে নিজের জীবনের কিছু মনে করিয়ে দেবে?
+
+- এই content-এর ভিতরে কি কোনো familiar contradiction আছে?
+
+- এই idea-টা কি খুব ছোট ও sharp form-এ বলা সম্ভব?
+
+- এই content কি reader-কে থামিয়ে চিন্তা করাতে পারে?
+
+- এই বিষয়টা কি conversational tone-এ explore করলে বেশি effective হবে?
+
+- এই content-এর ভিতরে কি example + psychology + observation একসাথে কাজ করছে?
+
+- এই idea-টাকে কি heavy না হয়ে thoughtfulভাবে বলা সম্ভব?
+
+- এই content কি কোনো বাস্তব ঘটনা বা বাস্তব behaviour-এর উপর দাঁড়িয়ে আছে?
+
+- এই বিষয়টা কি observation-based analysis চায়?
+
+- এই content-এর ভিতরে কি broader human behaviour decode করা হচ্ছে?
+
+- এই content কি online behaviour বা digital culture নিয়ে?
+
+- এই বিষয়টার ভিতরে কি validation, identity বা attention-এর psychology আছে?
+
+- এই content কি modern loneliness, self-alienation বা digital emptiness touch করছে?
+
+- এই idea-টা কি inward self-reflection chায়?
+
+- এই content কি vulnerability ছাড়া honest হবে না?
+
+- এই বিষয়টা কি self-questioning-এর মাধ্যমে explore করা বেশি natural?
+
+- এই content কি emotion থেকে insight-এর দিকে যাচ্ছে?
+
+- এই বিষয়টা কি subtleভাবে philosophical হতে পারে?
+
+- এই content কি recognition → reflection → realisation flow অনুসরণ করছে?
+
+- এই idea-টা কি observation দিয়ে শুরু করলে বেশি powerful হবে?
+
+- এই content কি explanation-এর চেয়ে emotional recognition বেশি চায়?
+
+- এই বিষয়টা কি declaration-এর বদলে questioning-এর মাধ্যমে ভালো কাজ করবে?
+
+Content or the core belief of the content:</div>
+        <button class="copy-btn" onclick="copyPrompt('p1', this)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Copy Prompt #1</span>
+        </button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #2: Reflection</span></div>
+        <div class="prompt-content" id="p2">Please rewrite it in the "Reflection" writing style (300-500words)</div>
+        <button class="copy-btn" onclick="copyPrompt('p2', this)">
+          <span>Copy Prompt #2</span>
+        </button>
+      </div>
+
+      <!-- Prompt #3 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #3: Aphorism</span></div>
+        <div class="prompt-content" id="p3">Please rewrite it in the "Aphorism" writing style</div>
+        <button class="copy-btn" onclick="copyPrompt('p3', this)">
+          <span>Copy Prompt #3</span>
+        </button>
+      </div>
+
+      <!-- Prompt #4 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #4: Conversational Essay</span></div>
+        <div class="prompt-content" id="p4">Please rewrite it in the "Conversational Essay" writing style</div>
+        <button class="copy-btn" onclick="copyPrompt('p4', this)">
+          <span>Copy Prompt #4</span>
+        </button>
+      </div>
+
+      <!-- Prompt #5 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #5: Real Example</span></div>
+        <div class="prompt-content" id="p5">Please rewrite it in the "Real Example Writing" writing style</div>
+        <button class="copy-btn" onclick="copyPrompt('p5', this)">
+          <span>Copy Prompt #5</span>
+        </button>
+      </div>
+
+      <!-- Prompt #6 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #6: Social Media Obs.</span></div>
+        <div class="prompt-content" id="p6">Please rewrite it in the "Social Media Observation" writing style</div>
+        <button class="copy-btn" onclick="copyPrompt('p6', this)">
+          <span>Copy Prompt #6</span>
+        </button>
+      </div>
+
+      <!-- Prompt #7 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #7: Inward Reflection</span></div>
+        <div class="prompt-content" id="p7">Please rewrite it in the "Inward Reflection" writing style</div>
+        <button class="copy-btn" onclick="copyPrompt('p7', this)">
+          <span>Copy Prompt #7</span>
+        </button>
+      </div>
+
+      <!-- Prompt #8 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #8: Strategy Selection</span></div>
+        <div class="prompt-content" id="p8">এই বিষয়টা কি declaration-এর বদলে questioning-এর মাধ্যমে ভালো কাজ করবে - তারজন্য কোন কোন writting style আদর্শ writing style হবে?</div>
+        <button class="copy-btn" onclick="copyPrompt('p8', this)">
+          <span>Copy Prompt #8</span>
+        </button>
+      </div>
+
+      <!-- Prompt #9 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #9: Draft Improvement</span></div>
+        <div class="prompt-content" id="p9">"answer না দিয়ে reader-এর ভিতরে প্রশ্ন জাগিয়ে রেখে যাওয়া"-র জন্য, Please rewrite it in the "Conversational Essay" writing style
+Improve this draft.
+Make it:
+less preachy
+more emotionally resonant
+deeper but simpler
+more psychologically accurate
+stronger opening hook
+smoother emotional transitions
+Remove:
+generic lines
+repetition
+abstract explanations</div>
+        <button class="copy-btn" onclick="copyPrompt('p9', this)">
+          <span>Copy Prompt #9</span>
+        </button>
+      </div>
+
+      <!-- Prompt #10 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #10: Title Review</span></div>
+        <div class="prompt-content" id="p10">এই টাইটেলটা কেমন হবে?:
+ "[Title]"</div>
+        <button class="copy-btn" onclick="copyPrompt('p10', this)">
+          <span>Copy Prompt #10</span>
+        </button>
+      </div>
+
+    </div>
+
+    <footer class="footer">
+      <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    function copyPrompt(id, btn) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span>Copied!</span>`;
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalContent;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
