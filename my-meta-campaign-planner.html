@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Meta Campaign Planner Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #020617;
+      --bg-gradient-end: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #22d3ee;
+      --accent-hover: #67e8f9;
+      --accent-success: #10b981;
+      --code-bg: rgba(0, 0, 0, 0.3);
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      --input-bg: rgba(15, 23, 42, 0.6);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: fixed linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 60px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .input-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      letter-spacing: 0.05em;
+    }
+
+    textarea {
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 15px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      resize: vertical;
+      min-height: 100px;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.1);
+    }
+
+    .prompt-workflow {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .step-label {
+      font-weight: 800;
+      font-size: 0.8rem;
+      background: var(--accent-primary);
+      color: #020617;
+      padding: 4px 14px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .prompt-content {
+      background: var(--code-bg);
+      padding: 25px;
+      border-radius: 12px;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 20px;
+      line-height: 1.5;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .prompt-content::-webkit-scrollbar { width: 8px; }
+    .prompt-content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+
+    .copy-btn {
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-primary);
+      color: #020617;
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: white;
+    }
+
+    .footer {
+      margin-top: 80px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .input-section { grid-template-columns: 1fr; }
+      h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>My Meta Campaign Planner</h1>
+    </header>
+
+    <div class="input-section">
+      <div class="input-group">
+        <label>Product Name</label>
+        <textarea id="productIn" placeholder="Enter product name..." oninput="updatePrompts()"></textarea>
+      </div>
+      <div class="input-group">
+        <label>Ad Names</label>
+        <textarea id="adsIn" placeholder="Enter ad names/assets..." oninput="updatePrompts()"></textarea>
+      </div>
+    </div>
+
+    <div class="prompt-workflow">
+      
+      <!-- Prompt #1 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #1: Target Definition</span></div>
+        <div class="prompt-content" id="p1Display">Loading...</div>
+        <button class="copy-btn" onclick="copyText('p1Display', this)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Copy Prompt #1</span>
+        </button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #2: Creative Content</span></div>
+        <div class="prompt-content" id="p2Display">You are a direct response copywriter working within a Facebook Ads rapid-launch framework.
+
+Framework rules:
+- Ads structure:
+  - 5 images
+  - 1 primary text
+  - 2 headlines
+  - Total = 10 ads
+- Creative is more important than targeting
+
+Your task:
+Create:
+- 1 high-converting ad copy
+- 2 headline variations
+- 5 image ideas
+
+Make them:
+- Simple
+- Clear
+- Conversion-focused
+
+Mandatory rule:
+Each instruction must be written as if you are guiding me live, in real time, while I am using my phone or computer.</div>
+        <button class="copy-btn" onclick="copyText('p2Display', this)">
+          <span>Copy Prompt #2</span>
+        </button>
+      </div>
+
+      <!-- Prompt #3 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #3: Naming & Setup</span></div>
+        <div class="prompt-content" id="p3Display">You are a Facebook Ads expert following a proven rapid-launch and scaling framework.
+
+Framework rules you must follow:
+- Campaign type: Conversion
+- 3 ad sets: Broad, Interest, Lookalike
+- Ad set budget
+- Automatic placements
+- 10 ads structure
+- Focus on creatives
+- Scaling: Red/Yellow/Green
+
+Your task:
+Guide me step-by-step to:
+1. Create a campaign
+2. Name the campaign, ad sets, and ads properly
+
+Naming rules:
+- Campaign: [Objective | Offer | Funnel | Version]
+- Ad set: [Audience Type | Target | Placement | Version]
+- Ad: [Creative Type | Angle | Headline Version]
+
+Mandatory rule:
+Each instruction must be written as if you are guiding me live, in real time, while I am using my phone or computer.</div>
+        <button class="copy-btn" onclick="copyText('p3Display', this)">
+          <span>Copy Prompt #3</span>
+        </button>
+      </div>
+
+      <!-- Prompt #4 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #4: Ad Set Configuration</span></div>
+        <div class="prompt-content" id="p4Display">You are a Facebook Ads expert following a proven rapid-launch and scaling framework.
+
+Framework rules you must follow:
+- 3 ad sets required:
+  1. Broad (no targeting)
+  2. Interest (group interests)
+  3. Lookalike (if data exists)
+- Use Advantage+ audience
+- Exclude warm audiences
+- Automatic placements
+- Focus on creatives over targeting
+
+Your task:
+Guide me step-by-step to create all 3 ad sets correctly inside Ads Manager.
+
+Explain:
+- What to type
+- What to select
+- What to avoid
+
+Mandatory rule:
+Each instruction must be written as if you are guiding me live, in real time, while I am using my phone or computer.</div>
+        <button class="copy-btn" onclick="copyText('p4Display', this)">
+          <span>Copy Prompt #4</span>
+        </button>
+      </div>
+
+      <!-- Prompt #5 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #5: Lists Extraction</span></div>
+        <div class="prompt-content" id="p5Display">Please give the bullet-lists of these:
+Campaign Name
+Ad Set Names
+Ad Names</div>
+        <button class="copy-btn" onclick="copyText('p5Display', this)">
+          <span>Copy Prompt #5</span>
+        </button>
+      </div>
+
+      <!-- Prompt #6 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #6: AI Visual Prompts</span></div>
+        <div class="prompt-content" id="p6Display">Loading...</div>
+        <button class="copy-btn" onclick="copyText('p6Display', this)">
+          <span>Copy Prompt #6</span>
+        </button>
+      </div>
+
+      <!-- Prompt #7 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #7: Final Table</span></div>
+        <div class="prompt-content" id="p7Display">Please provide the following details for all 10 ads in a table, with each ad presented in a separate row:
+
+- Campaign Name
+- Ad Set Name
+- Ad Name
+- Ad Image Prompt
+- Title
+- Caption</div>
+        <button class="copy-btn" onclick="copyText('p7Display', this)">
+          <span>Copy Prompt #7</span>
+        </button>
+      </div>
+
+    </div>
+
+    <footer class="footer">
+      <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    const p1Template = `You are a Facebook Ads expert following a proven rapid-launch and scaling framework.
+
+Please review the uploaded document. It contains the details of my product called [Product Name].
+
+Framework rules you must follow:
+- Campaign type: Conversion (Sales or Leads)
+- Budget: Ad set level (NOT campaign budget)
+- You must create exactly 3 ad sets:
+  1. Broad
+  2. Interest
+  3. Lookalike
+- Use Advantage+ audience
+- Exclude warm audiences
+- Automatic placements
+- Focus more on creatives than targeting
+
+Your task:
+Help me define the FULL targeting setup for my campaign.
+
+First, ask me:
+- What product/service I’m selling
+- Price
+- Target customer type
+- Country or region
+- Whether I have existing data
+
+Then generate:
+1. Broad targeting (age, gender, location)
+2. Interest targeting (5–10 interests + reasoning)
+3. Lookalike targeting (source + %)
+4. Exclusions
+5. Optional optimization advice
+
+Mandatory rule:
+Each instruction must be written as if you are guiding me live, in real time, while I am using my phone or computer.`;
+
+    const p6Template = `Please generate AI prompts for all 10 static images in the Meta ad campaign listed below and provide each prompt in a separate code box.
+
+Campaign Assets:
+[Ad Names]
+
+Critical Instruction:
+Integrate and consistently apply my brand policy across all 10 AI prompts.
+
+Brand Policy:
+Create a premium luxury-minimalist visual with the emotional identity: “Quiet luxury meets thoughtful modern promotion.”
+
+Use a refined warm luxury color palette featuring:
+- Champagne Gold (#C89B3C)
+- Metallic Bronze (#8B5E1A)
+- Soft Ivory (#F8F4EC)
+- Elegant Cream White (#FFFDF8)
+- Muted Premium Browns (#35271A)
+- Sophisticated warm neutral tones
+
+The visual style must feel calm, sophisticated, trustworthy, editorial, cinematic, and high-end — without appearing loud, flashy, or overly commercial.
+
+Incorporate:
+- Subtle metallic gold reflections
+- Soft cinematic lighting
+- Warm ambient glow
+- Luxury gradients
+- Refined glassmorphism
+- Elegant visual depth
+- Clean minimalist composition
+
+Style Direction:
+Modern luxury branding, elegant editorial aesthetics, premium lifestyle visuals, tasteful product presentation, refined UI design, cinematic warmth, sophisticated minimalism, polished luxury atmosphere, and human-first visual communication.
+
+Maintain a premium “quiet luxury” feel through:
+- Balanced whitespace
+- Restrained elegance
+- Soft contrast
+- Visually soothing composition
+
+Avoid:
+- Oversaturated colors
+- Cluttered layouts
+- Aggressive advertising aesthetics
+- Neon tones
+- Cheap-looking gold textures
+- Harsh shadows
+- Cyberpunk styles
+- Cartoonish elements
+- Glossy plastic surfaces
+- Flashy luxury clichés
+
+Additional Instruction:
+Please review the uploaded image, which contains the product image for my product called [Product Name], and incorporate the product naturally and appropriately into all AI prompts while maintaining visual consistency with the brand policy.
+
+Output Requirements:
+- Generate exactly 10 distinct AI prompts (one for each listed campaign asset)
+- Tailor each prompt to its specific angle and variation (e.g., ThoughtSpiral, EmotionalQuestion, HV1, HV2)
+- Provide each AI prompt in a separate code box
+- Ensure all prompts are production-ready, visually detailed, and optimized for premium Meta ad creatives`;
+
+    function updatePrompts() {
+      const productName = document.getElementById('productIn').value || "[Product Name]";
+      const adNames = document.getElementById('adsIn').value || "[Ad Names]";
+
+      document.getElementById('p1Display').innerText = p1Template.replace('[Product Name]', productName);
+      
+      let p6 = p6Template.replace('[Ad Names]', adNames);
+      p6 = p6.replace('[Product Name]', productName);
+      document.getElementById('p6Display').innerText = p6;
+    }
+
+    function copyText(id, btn) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span>Copied!</span>`;
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalContent;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Initialize
+    updatePrompts();
+  </script>
+</body>
+</html>
