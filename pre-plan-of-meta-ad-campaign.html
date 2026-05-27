@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pre-Plan of Meta Ad Campaign Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #020617;
+      --bg-gradient-end: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #22d3ee;
+      --accent-hover: #67e8f9;
+      --accent-success: #10b981;
+      --code-bg: rgba(0, 0, 0, 0.3);
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      --input-bg: rgba(15, 23, 42, 0.6);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: fixed linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 60px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .sub-header {
+      color: var(--accent-primary);
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .input-section {
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      letter-spacing: 0.05em;
+    }
+
+    textarea {
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 15px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 80px;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.1);
+    }
+
+    .prompt-workflow {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .step-label {
+      font-weight: 800;
+      font-size: 0.85rem;
+      background: var(--accent-primary);
+      color: #020617;
+      padding: 4px 14px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .prompt-content {
+      background: var(--code-bg);
+      padding: 25px;
+      border-radius: 12px;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 20px;
+      line-height: 1.5;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .prompt-content::-webkit-scrollbar { width: 8px; }
+    .prompt-content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+
+    .copy-btn {
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-primary);
+      color: #020617;
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: white;
+    }
+
+    .footer {
+      margin-top: 80px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Pre-Plan of Meta Ad Campaign</h1>
+    </header>
+
+    <div class="input-section">
+      <div class="input-group">
+        <label>Product Name</label>
+        <textarea id="productIn" placeholder="Enter product name..." oninput="updatePrompts()"></textarea>
+      </div>
+    </div>
+
+    <div class="prompt-workflow">
+      
+      <!-- Prompt #1 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #1: Strategy Analysis</span></div>
+        <div class="prompt-content" id="p1Display">Loading prompt template...</div>
+        <button class="copy-btn" onclick="copyText('p1Display', this)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Copy Prompt #1</span>
+        </button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #2: Targeting Table</span></div>
+        <div class="prompt-content" id="p2Display">Please provide the following details in a four-column table:
+
+- Meta interests
+- Age groups
+- Genders
+- Facebook-native keywords for finding public groups in my niche</div>
+        <button class="copy-btn" onclick="copyText('p2Display', this)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>Copy Prompt #2</span>
+        </button>
+      </div>
+
+    </div>
+
+    <footer class="footer">
+      <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    const p1Template = `Please review the uploaded document. It contains the details of my product called [Product Name].
+
+My targeted geographic locations are:
+- West Bengal (India)
+- Tripura (India)
+- Any locations in India where Bengali-speaking people are present.
+
+You are a Facebook Ads expert and commercially-focused direct-response marketing strategist specializing in digital products, systems, prompts, templates, SOPs, bundles, tools, services, and online offers.
+
+Your primary objective is NOT generic marketing advice.
+
+Your objective is:
+- profitable customer acquisition
+- conversion-focused targeting
+- audience psychology alignment
+- scalable ad setup
+- commercially practical execution
+
+Always prioritize:
+- revenue potential
+- conversion probability
+- buyer psychology
+- execution simplicity
+- practical usefulness
+
+Avoid:
+- vanity branding
+- engagement-only thinking
+- motivational fluff
+- generic advice
+- theory-heavy explanations
+
+────────────────────────
+BUSINESS THINKING RULES
+────────────────────────
+
+Always think in terms of:
+
+Problem → Frustration → Urgency → Solution → Conversion
+
+Assume:
+People do not buy products.
+
+They buy:
+- relief
+- clarity
+- confidence
+- speed
+- simplicity
+- control
+- opportunity
+- reduced confusion
+- emotional resolution
+
+The offer should always be treated as:
+- a practical solution
+- a system
+- a workflow
+- a transformation mechanism
+
+NOT merely a “product.”
+
+────────────────────────
+META ADS FRAMEWORK RULES
+────────────────────────
+
+Follow these campaign rules unless instructed otherwise:
+
+Campaign Objective:
+- Sales or Leads
+
+Budget Structure:
+- Ad Set Budget Optimization (ABO)
+
+Do NOT default to:
+- Campaign Budget Optimization (CBO)
+
+Create EXACTLY 3 ad sets:
+
+1. Broad
+2. Interest
+3. Lookalike
+
+Audience Rules:
+- Use Advantage+ audience
+- Use automatic placements
+- Exclude warm audiences
+- Prioritize creatives more than hyper-specific targeting
+
+────────────────────────
+YOUR TASK
+────────────────────────
+
+Help me identify the BEST:
+
+1. Meta ad interests
+2. Age groups
+3. Audience psychology
+4. Buyer intent patterns
+5. Public Facebook group search keywords
+6. Bengali audience targeting opportunities
+7. Meta targeting structure
+8. Commercial targeting angles
+
+────────────────────────
+STEP 1 — FIRST ANALYZE
+────────────────────────
+
+After reviewing the uploaded product document, first identify:
+
+1. Product category
+2. Core buyer problem
+3. Emotional drivers
+4. Desired transformation
+5. Likely buyer motivations
+6. Commercial urgency level
+7. Audience sophistication level
+8. Most likely buyer awareness stage
+
+────────────────────────
+STEP 2 — THEN GENERATE
+────────────────────────
+
+Generate the following:
+
+1. Recommended Age Groups
+- primary age range
+- secondary testing ranges
+- reasoning
+
+2. Gender Recommendations
+- all genders or segmented
+- reasoning
+
+3. Language Recommendations
+- Bengali
+- English
+- mixed-language behavior insights
+
+4. Broad Audience Setup
+Include:
+- age
+- gender
+- locations
+- language settings
+
+5. Interest Targeting Suggestions
+Generate:
+- 15–30 relevant Meta interests
+
+Divide them into:
+- problem-related interests
+- tool/software interests
+- aspiration interests
+- behavior interests
+- business/professional interests
+
+For each interest:
+- explain WHY it matches the likely buyer psychology
+
+6. Lookalike Audience Suggestions
+If appropriate, recommend:
+- source audiences
+- percentage ranges
+- audience priority order
+
+If insufficient data likely exists:
+- explain fallback strategy
+
+7. Public Facebook Group Discovery Keywords
+Generate:
+- Bengali search keywords
+- English search keywords
+- mixed Bengali-English keywords
+
+Include:
+- problem-focused keywords
+- goal-focused keywords
+- tool-focused keywords
+- identity-focused keywords
+
+8. Public Facebook Group Participation Strategy
+Explain:
+- what kinds of groups to prioritize
+- what kinds of groups to avoid
+- what engagement behavior works best
+- how to identify commercially valuable groups
+
+9. Audience Psychology Breakdown
+Identify:
+- recurring frustrations
+- emotional pain points
+- internal desires
+- likely objections
+- common fears
+- likely buying triggers
+
+10. Creative Direction Recommendations
+Recommend:
+- emotional angles
+- hook styles
+- messaging direction
+- awareness-focused approaches
+
+11. Common Mistakes To Avoid
+List:
+- targeting mistakes
+- audience mistakes
+- creative mistakes
+- positioning mistakes
+
+────────────────────────
+OUTPUT RULES
+────────────────────────
+
+- Use clear headings
+- Use bullet points
+- Keep recommendations commercially practical
+- Avoid generic advice
+- Prioritize real-world Meta Ads performance
+- Write as if guiding me live while I am actively using Facebook Ads Manager on my phone or computer
+- Focus on Bengali-speaking Indian audiences and their likely online behavior patterns`;
+
+    function updatePrompts() {
+      const productName = document.getElementById('productIn').value || "[Product Name]";
+      document.getElementById('p1Display').innerText = p1Template.replace('[Product Name]', productName);
+    }
+
+    function copyText(id, btn) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span>Copied!</span>`;
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalContent;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Initialize
+    updatePrompts();
+  </script>
+</body>
+</html>
