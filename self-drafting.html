@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Self-Drafting Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #020617;
+      --bg-gradient-end: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #22d3ee;
+      --accent-hover: #67e8f9;
+      --accent-success: #10b981;
+      --code-bg: rgba(0, 0, 0, 0.3);
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      --input-bg: rgba(15, 23, 42, 0.6);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: fixed linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .input-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 50px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      letter-spacing: 0.05em;
+    }
+
+    textarea {
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      resize: vertical;
+      min-height: 80px;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.1);
+    }
+
+    .prompt-workflow {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .step-label {
+      font-weight: 800;
+      font-size: 0.8rem;
+      background: var(--accent-primary);
+      color: #020617;
+      padding: 4px 14px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .prompt-content {
+      background: var(--code-bg);
+      padding: 25px;
+      border-radius: 12px;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 20px;
+      line-height: 1.5;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .prompt-content::-webkit-scrollbar { width: 8px; }
+    .prompt-content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+
+    .copy-btn {
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-primary);
+      color: #020617;
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: white;
+    }
+
+    .footer {
+      margin-top: 80px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Self-Drafting</h1>
+    </header>
+
+    <div class="input-section">
+      <div class="input-group">
+        <label>My Target Audience</label>
+        <textarea id="inAudience" placeholder="যেমন- ফ্রিল্যান্স গ্রাফিক ডিজাইনার" oninput="updatePrompts()"></textarea>
+      </div>
+      <div class="input-group">
+        <label>Their dream / need</label>
+        <textarea id="inDream" placeholder="যেমন- হাই-পেয়িং ক্লায়েন্ট পাওয়া" oninput="updatePrompts()"></textarea>
+      </div>
+      <div class="input-group">
+        <label>Obstacle</label>
+        <textarea id="inObstacle" placeholder="Enter specific obstacle..." oninput="updatePrompts()"></textarea>
+      </div>
+      <div class="input-group">
+        <label>বাক্য (Sentence)</label>
+        <textarea id="inSentence" placeholder="বাংলা বাক্যটি এখানে লিখুন..." oninput="updatePrompts()"></textarea>
+      </div>
+    </div>
+
+    <div class="prompt-workflow">
+      
+      <!-- Prompt #1 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #1: Obstacle List</span></div>
+        <div class="prompt-content" id="p1Display">Loading...</div>
+        <button class="copy-btn" onclick="copyText('p1Display', this)">
+          <span>Copy Prompt #1</span>
+        </button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #2: Shortlist & Cluster</span></div>
+        <div class="prompt-content" id="p2Display">আমি চাই এই টপিকে রিডারকে beginner-level/under prepared level থেকে “complete creator framework”-এ elevate করবে এমন একটা ইবুক লিখতে। এই টপিকে আমি একটা ইবুক লিখতে চাই। তুমি জরুরি obstacles গুলো shortlist ও Clusterized করো</div>
+        <button class="copy-btn" onclick="copyText('p2Display', this)">
+          <span>Copy Prompt #2</span>
+        </button>
+      </div>
+
+      <!-- Prompt #3 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #3: Cluster Names</span></div>
+        <div class="prompt-content" id="p3Display">Cluster গুলোর একটা তালিকা দাও। জাস্ট Cluster names, in Bengali</div>
+        <button class="copy-btn" onclick="copyText('p3Display', this)">
+          <span>Copy Prompt #3</span>
+        </button>
+      </div>
+
+      <!-- Prompt #4 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #4: Knowledge Review</span></div>
+        <div class="prompt-content" id="p4Display">এবার এই cluster-র তালিকাকে review করো। এই Cluster গুলো নিয়ে লেখা ইবুক একজন রিডার-র নলেজ ও স্কিল কতখানি develop করবে যাতে তার craft সত্যিকারের productive হয়ে ওঠে ও সে তার স্বপ্ন পূরণ করতে পুরোপুরি সমর্থ হয় সেটা বিচার করো।</div>
+        <button class="copy-btn" onclick="copyText('p4Display', this)">
+          <span>Copy Prompt #4</span>
+        </button>
+      </div>
+
+      <!-- Prompt #5 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #5: Chapter Energy</span></div>
+        <div class="prompt-content" id="p5Display">আমি ৪ ধরনের Chapter energy ব্যবহার করবো -
+ ১, Obstacle Chapters ২, Evolution Chapters (Obstacle + Identity Transformation) ৩, System Chapters (Workflow / Strategy / Execution) ৪, Hybrid Chapters
+তোমার দেওয়া চ্যাপ্টারগুলোর কোনটা কোন এনার্জিকে belong করে সেটা identify করো</div>
+        <button class="copy-btn" onclick="copyText('p5Display', this)">
+          <span>Copy Prompt #5</span>
+        </button>
+      </div>
+
+      <!-- Prompt #6 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #6: Chapter Outline</span></div>
+        <div class="prompt-content" id="p6Display">Loading...</div>
+        <button class="copy-btn" onclick="copyText('p6Display', this)">
+          <span>Copy Prompt #6</span>
+        </button>
+      </div>
+
+      <!-- Prompt #7 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #7: Title Refinement</span></div>
+        <div class="prompt-content" id="p7Display">Now, please rewrite the section and paragraph titles. They currently sound robotic, generic, lifeless, and unengaging. Make them more unique, emotionally compelling, and interesting while keeping them relevant to the topic.</div>
+        <button class="copy-btn" onclick="copyText('p7Display', this)">
+          <span>Copy Prompt #7</span>
+        </button>
+      </div>
+
+      <!-- Prompt #8 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #8: Energy Definitions</span></div>
+        <div class="prompt-content" id="p8Display">1. Obstacle Chapters
+Definition
+এই ধরনের chapter-এর মূল কাজ হলো reader-এর ভিতরের বা বাইরের specific বাধা, ভয়, confusion, weakness বা self-sabotaging pattern identify করা এবং সেটা overcome করার awareness ও direction দেওয়া।
+এগুলো সাধারণত reader-এর pain point দিয়ে শুরু হয়।
+
+Core Purpose
+Reader কেন stuck সেটা বুঝতে সাহায্য করা
+Emotional blockage identify করা
+Hidden self-sabotage pattern reveal করা
+Reader-কে mentally unstuck করা
+Awareness ও emotional breakthrough তৈরি করা
+
+Main Reader Question
+“আমি কেন এগোতে পারছি না?”
+
+Main Transformation
+Emotionally blocked → mentally clearer
+
+Core Elements
+Emotional pain point
+Frustration & consequence
+Psychological triggers
+Fear & insecurity
+Behavioural patterns
+Self-sabotage
+Internal conflict
+Root causes
+Mindset mistakes
+Emotional realization
+Initial solution direction
+Recovery steps
+
+Writing Energy
+Emotionally relatable
+Observational
+Empathetic
+Reflective
+Human & conversational
+
+Examples
+Fear of judgment
+Self-doubt
+Overthinking
+Comparison syndrome
+Inconsistency
+Burnout
+Lack of confidence
+
+2. Evolution Chapters
+(Obstacle + Identity Transformation)
+Definition
+এই chapter-গুলোর কাজ হলো reader-এর creator identity, self-image, perspective এবং long-term thinking evolve করা।
+এগুলো শুধু সমস্যা solve করে না — reader কে অন্য level-এর creator হিসেবে ভাবতে শেখায়।
+
+Core Purpose
+Identity transformation
+Perspective shift
+Creator self-awareness তৈরি করা
+Authenticity develop করা
+Reader-এর “creator philosophy” build করা
+
+Main Reader Question
+“আমি আসলে কেমন creator হতে চাই?”
+
+Main Transformation
+Random creator → intentional creator
+
+Core Elements
+Identity exploration
+Authenticity
+Personal branding
+Creator mindset
+Self-image
+Perspective shift
+Values & philosophy
+Emotional maturity
+Long-term thinking
+Audience relationship
+Creator purpose
+Uniqueness discovery
+
+Writing Energy
+Reflective
+Emotionally intelligent
+Perspective-shifting
+Philosophical but practical
+Deep but conversational
+
+Examples
+Creator mindset
+Authentic creator identity
+Personal branding
+Unique voice
+Audience connection
+Long-term influence
+Authority mindset
+
+3. System Chapters
+(Workflow / Strategy / Execution)
+Definition
+এই chapter-গুলোর মূল কাজ হলো reader-কে clear practical systems, workflows, frameworks, strategies এবং execution methods শেখানো।
+এগুলো “কীভাবে করতে হবে” type chapter।
+
+Core Purpose
+Execution clarity দেওয়া
+Workflow তৈরি করা
+Skill implementation শেখানো
+Strategic thinking develop করা
+Organized growth enable করা
+
+Main Reader Question
+“এখন exactly কীভাবে করব?”
+
+Main Transformation
+Confused effort → organized execution
+
+Core Elements
+Frameworks
+Systems
+Workflows
+Step-by-step process
+Strategy
+Skill breakdown
+Execution methods
+Productivity techniques
+Optimization
+Templates
+Practical examples
+Action plans
+Checklists
+Habit systems
+
+Writing Energy
+Structured
+Practical
+Clear
+Strategic
+Implementation-heavy
+
+Examples
+Hook writing framework
+Storytelling system
+Content workflow
+Analytics
+Audience growth strategy
+Monetization system
+Productivity system
+
+4. Hybrid Chapters
+(Evolution + System)
+Definition
+এই chapter-গুলো identity transformation, psychology, emotional intelligence এবং practical execution — এই দুই layer-কে একসাথে connect করে।
+এগুলো deep understanding + real-world application combine করে।
+
+Core Purpose
+Human psychology বুঝানো
+Emotional intelligence develop করা
+Deep understanding-কে practical application-এর সাথে connect করা
+Strategy-এর human side explain করা
+
+Main Reader Question
+“এটা deeply বুঝে বাস্তবে apply কীভাবে করব?”
+
+Main Transformation
+Surface understanding → intelligent application
+
+Core Elements
+Human psychology
+Audience behaviour
+Emotional engagement
+Behaviour patterns
+Strategy + psychology connection
+Perspective + execution blend
+Relatability
+Trust building
+Human connection
+Real-life creator behaviour
+Emotional triggers
+Application frameworks
+Communication dynamics
+
+Writing Energy
+Insightful
+Analytical but emotional
+Strategic but human
+Deeply observant
+Practical + psychological
+
+Examples
+Audience psychology
+Emotional content creation
+Community building
+Trust building
+Audience buying psychology
+Strategic positioning
+Emotional storytelling</div>
+        <button class="copy-btn" onclick="copyText('p8Display', this)">
+          <span>Copy Prompt #8</span>
+        </button>
+      </div>
+
+      <!-- Prompt #9 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #9: English to Bengali Replacement</span></div>
+        <div class="prompt-content" id="p9Display">Loading...</div>
+        <button class="copy-btn" onclick="copyText('p9Display', this)">
+          <span>Copy Prompt #9</span>
+        </button>
+      </div>
+
+      <!-- Prompt #10 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #10: Natural Flow Polish</span></div>
+        <div class="prompt-content" id="p10Display">Loading...</div>
+        <button class="copy-btn" onclick="copyText('p10Display', this)">
+          <span>Copy Prompt #10</span>
+        </button>
+      </div>
+
+      <!-- Prompt #11 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #11: Obstacle Framework</span></div>
+        <div class="prompt-content" id="p11Display">OBSTACLE CHAPTER FRAMEWORK (MANDATORY)
+
+1. Introduction without a title, including a natural transition statement
+
+2. Describe the obstacle and its impact
+   - Emotional impact
+   - Practical impact
+   - Long-term consequence
+   - Hidden damage caused by the obstacle
+
+3. Explain how, when, and why this obstacle appears
+
+   Reasons behind it:
+   - Lack of awareness or understanding
+   - Lack of practical skills
+   - Lack of emotional resilience
+   - Wrong mindset or belief system
+   - Social pressure or environmental influence
+   - Emotional conditioning and self-sabotaging patterns
+
+4. Show relatable real-life creator behaviours or scenarios
+   - Common beginner reactions
+   - Thought patterns caused by the obstacle
+   - How creators unknowingly make the situation worse
+   - Daily-life creator situations where this obstacle appears
+
+5. Introduce the solution
+   - Emotional breakthrough
+   - Perspective shift
+   - Initial mindset correction
+
+6. Explain the solution deeply
+   - Psychology behind the solution
+   - Emotional regulation required
+   - Behaviour changes required
+   - New mindset required
+   - Skills needed to overcome the obstacle
+
+7. Show the step-by-step implementation process
+   - Practical actions
+   - Behavioural adjustments
+   - Habits and exercises
+   - Recovery systems
+   - Progress checkpoints
+
+8. End with an untitled conclusion
+   - Reflection
+   - Emotional realization
+   - Encouragement
+   - Transition to the next stage of growth</div>
+        <button class="copy-btn" onclick="copyText('p11Display', this)">
+          <span>Copy Prompt #11</span>
+        </button>
+      </div>
+
+      <!-- Prompt #12 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #12: Evolution Framework</span></div>
+        <div class="prompt-content" id="p12Display">EVOLUTION CHAPTER FRAMEWORK (MANDATORY)
+
+1. Introduction without a title, including a natural transition statement
+
+2. Describe the current identity problem or limitation
+   - How it limits creator growth
+   - Emotional and psychological consequence
+   - Why most creators stay stuck at this level
+
+3. Explain how and why this limitation develops
+
+   Reasons behind it:
+   - Lack of self-awareness
+   - Lack of identity clarity
+   - Copying others instead of understanding oneself
+   - Fear of being authentic
+   - Lack of long-term creator thinking
+   - Social validation dependency
+
+4. Show relatable creator behaviours or identity patterns
+   - Common beginner identity mistakes
+   - How creators lose originality
+   - Behaviour caused by insecurity and imitation
+   - Real-life creator mindset examples
+
+5. Introduce the evolved perspective or identity shift
+
+6. Explain the transformation deeply
+   - Psychology behind creator identity
+   - Authenticity and audience connection
+   - Perspective shifts required
+   - Emotional maturity required
+   - Long-term creator evolution
+
+7. Show the step-by-step identity development process
+   - Self-discovery exercises
+   - Reflection practices
+   - Perspective-building habits
+   - Identity alignment actions
+   - Long-term growth checkpoints
+
+8. End with an untitled conclusion
+   - Reflection
+   - Identity realization
+   - Emotional closure
+   - Natural transition toward deeper creator evolution</div>
+        <button class="copy-btn" onclick="copyText('p12Display', this)">
+          <span>Copy Prompt #12</span>
+        </button>
+      </div>
+
+      <!-- Prompt #13 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #13: System Framework</span></div>
+        <div class="prompt-content" id="p13Display">SYSTEM CHAPTER FRAMEWORK (MANDATORY)
+
+1. Introduction without a title, including a natural transition statement
+
+2. Describe the workflow, execution, or strategy problem
+   - Practical consequence
+   - Productivity or growth limitation
+   - Why creators struggle without systems
+
+3. Explain how and why this problem appears
+
+   Reasons behind it:
+   - Lack of strategic understanding
+   - Lack of execution systems
+   - Poor workflow design
+   - Lack of process clarity
+   - Random action-taking
+   - Inconsistent implementation habits
+
+4. Show relatable creator workflow problems or scenarios
+   - Common beginner execution mistakes
+   - Disorganized creator behaviour
+   - Examples of inefficient workflows
+   - Real-life productivity breakdown situations
+
+5. Introduce the system, framework, or strategic solution
+
+6. Explain the system deeply
+   - Strategy behind the system
+   - Workflow logic
+   - Execution principles
+   - Optimization methods
+   - Skills required for effective implementation
+
+7. Show the step-by-step implementation process
+   - Clear action steps
+   - Workflow setup
+   - Templates or frameworks
+   - Habit integration
+   - Progress tracking systems
+
+8. End with an untitled conclusion
+   - Key realization
+   - Practical takeaway
+   - Execution mindset reinforcement
+   - Transition to the next level of implementation</div>
+        <button class="copy-btn" onclick="copyText('p13Display', this)">
+          <span>Copy Prompt #13</span>
+        </button>
+      </div>
+
+      <!-- Prompt #14 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #14: Hybrid Framework</span></div>
+        <div class="prompt-content" id="p14Display">HYBRID CHAPTER FRAMEWORK (MANDATORY)
+
+1. Introduction without a title, including a natural transition statement
+
+2. Describe the deeper human or creator problem
+   - Emotional impact
+   - Behavioural impact
+   - Strategic consequence
+   - Why surface-level understanding fails
+
+3. Explain how and why this issue appears
+
+   Reasons behind it:
+   - Lack of psychological understanding
+   - Lack of strategic awareness
+   - Lack of emotional intelligence
+   - Human behavioural patterns
+   - Audience psychology misunderstandings
+   - Weak communication or connection skills
+
+4. Show relatable creator and audience scenarios
+   - Real-world creator behaviour
+   - Audience reactions and patterns
+   - Emotional disconnect situations
+   - Strategic mistakes caused by shallow understanding
+
+5. Introduce the deeper solution or integrated perspective
+
+6. Explain the solution deeply
+   - Human psychology behind it
+   - Emotional dynamics involved
+   - Strategic application
+   - Communication principles
+   - Mindset and behavioural shifts required
+
+7. Show the step-by-step implementation process
+   - Practical application methods
+   - Communication exercises
+   - Audience understanding practices
+   - Strategic behaviour adjustments
+   - Long-term implementation checkpoints
+
+8. End with an untitled conclusion
+   - Reflection
+   - Deeper realization
+   - Human insight
+   - Natural transition to the next stage of creator growth</div>
+        <button class="copy-btn" onclick="copyText('p14Display', this)">
+          <span>Copy Prompt #14</span>
+        </button>
+      </div>
+
+    </div>
+
+    <footer class="footer">
+      <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    const p1Template = `আমার অডিয়েন্স - [audience]
+
+আমার অডিয়েন্সের স্বপ্ন - [dream]
+
+তারা পারছে না তাদের স্বপ্নকে chase বা হাসিল করতে।
+
+তাদের এই নিজের স্বপ্নকে chase বা হাসিল করতে না পারার সম্ভাব্য সমস্ত Obstacles গুলোর একটি তালিকা দাও।
+
+ভারতীয় বাংলায় উত্তর দাও। ভাষা যেন কলকাতায় দৈনন্দিন কথোপকথনে প্রচলিত আধুনিক, সহজ সরল ও প্রাণবন্ত বাংলা হয়।`;
+
+    const p6Template = `Please outline a chapter of my ebook tailoring to this specific obstacle:
+"[obstacle]"
+
+FRAMEWORK (MANDATORY)
+
+1. Introduction without a title, including a natural transition statement
+
+2. Describe the obstacle and its impact
+   - Emotional impact
+   - Practical impact
+   - Long-term consequence
+
+3. Explain how, when, and why this obstacle appears
+
+   Reasons behind it:
+   - Lack of knowledge or awareness about how it works
+   - Lack of the skills required to perform the related activity
+   - Lack of the right mindset required to do the job
+   - Environmental or social influence
+   - Emotional conditioning and behavioural patterns
+
+4. Show relatable real-life creator behaviours or scenarios
+   - How this obstacle appears in daily creator life
+   - Common beginner mistakes
+   - Thought patterns, behaviours, and reactions caused by this obstacle
+
+5. Introduce the solution
+
+6. Explain the solution deeply
+   - Psychology behind the solution
+   - Strategy behind the solution
+   - Skills required
+   - Mindset shifts required
+
+7. Show the step-by-step implementation process
+   - Practical actions
+   - Habits and exercises
+   - Systems or workflows
+   - Progress checkpoints
+
+8. End with an untitled conclusion
+   - Reflection
+   - Key realization
+   - Emotional closure
+   - Natural transition to the next chapter`;
+
+    const p9Template = `নীচের বাক্যটা পড়ো। এতে ব্যবহার করা ইংরেজি words গুলো বাংলা শব্দ দিয়ে replace করো -
+[sentence]`;
+
+    const p10Template = `নীচের বাক্যটা পড়ো। বাক্যটা সহজ, স্বাভাবিক বাংলা বলার রীতি পদ্ধতির মতো নয়। They currently sound robotic, generic, lifeless, and unengaging. Make them more unique, emotionally compelling, and interesting while keeping them relevant to the topic.
+ভাষা যেন কলকাতায় দৈনন্দিন কথোপকথনে প্রচলিত আধুনিক, সহজ সরল ও প্রাণবন্ত বাংলা হয়।
+[sentence]`;
+
+    function updatePrompts() {
+      const aud = document.getElementById('inAudience').value || "[My Target Audience]";
+      const drm = document.getElementById('inDream').value || "[Their dream / need]";
+      const obs = document.getElementById('inObstacle').value || "[Obstacle]";
+      const sen = document.getElementById('inSentence').value || "[বাক্য]";
+
+      document.getElementById('p1Display').innerText = p1Template.replace('[audience]', aud).replace('[dream]', drm);
+      document.getElementById('p6Display').innerText = p6Template.replace('[obstacle]', obs);
+      document.getElementById('p9Display').innerText = p9Template.replace('[sentence]', sen);
+      document.getElementById('p10Display').innerText = p10Template.replace('[sentence]', sen);
+    }
+
+    function copyText(id, btn) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span>Copied!</span>`;
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalContent;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Init
+    updatePrompts();
+  </script>
+</body>
+</html>
